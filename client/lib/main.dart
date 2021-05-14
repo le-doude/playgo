@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(PlayGoClientApp());
 }
 
-class MyApp extends StatelessWidget {
+class PlayGoClientApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -22,13 +22,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: PlayGoClientHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class PlayGoClientHomePage extends StatefulWidget {
+  PlayGoClientHomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -42,10 +42,10 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _PlayGoClientHomePageState createState() => _PlayGoClientHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
