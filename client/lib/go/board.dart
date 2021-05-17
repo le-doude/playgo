@@ -5,15 +5,20 @@ import 'board/theme.dart';
 import 'rules/start_condition.dart';
 
 class Board extends StatefulWidget {
+  final Layout layout;
+  final StartCondition startCondition;
+  final Theme theme;
+
+  const Board({Key key, this.layout, this.startCondition, this.theme})
+      : super(key: key);
+
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
+  BoardState createState() => BoardState();
+}
 
-  Board(Layout layout, StartCondition startCondition, Theme theme) {
-    throw UnimplementedError();
+class BoardState extends State<Board> {
+  @override
+  Widget build(BuildContext context) {
+    throw UnimplementedError("not there");
   }
-
-  Widget build(BuildContext context) {}
 }

@@ -1,4 +1,10 @@
+import 'dart:async';
+import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'package:logger/logger.dart';
 
 void main() {
   runApp(PlayGoClientApp());
@@ -22,7 +28,7 @@ class PlayGoClientApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: PlayGoClientHomePage(title: 'Flutter Demo Home Page'),
+      home: PlayGoClientHomePage(title: 'Play Go Server'),
     );
   }
 }
@@ -73,36 +79,7 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
+      body: Container(child: Center(child: BoardControl(19, 19))),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
@@ -110,4 +87,99 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+
+class BoardControl extends StatelessWidget {
+  final int columns;
+  final int rows;
+
+  BoardControl(this.columns, this.rows);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: AlignmentDirectional.center,
+      children: [
+        backgroundImage(),
+        gameGrid(this.columns, this.rows),
+      ],
+    );
+  }
+
+  Widget backgroundImage() {
+    return Image(
+        image: AssetImage("assets/textures/shinkaya2.jpg"),
+        alignment: Alignment.center,
+        height: double.infinity,
+        width: double.infinity,
+        fit: BoxFit.contain);
+  }
+
+  Widget gameGrid(int col, int rws) {
+    return Center(
+        child: CustomPaint(painter: BoardGrid(col, rws), child: Container()));
+  }
+}
+
+class BoardGrid extends CustomPainter {
+  final int columnCount;
+  final int rowCount;
+
+  BoardGrid(this.columnCount, this.rowCount);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    double dimension = min(size.height, size.width);
+    double margin = dimension * 0.045;
+    double rectSize = dimension - (margin * 2);
+    var paint = Paint();
+    paint.style = PaintingStyle.stroke;
+    paint.color = Colors.red;
+    paint.strokeWidth = 2.0;
+    var center = Offset(size.width / 2, size.height / 2);
+    var rect =
+        Rect.fromCenter(center: center, width: rectSize, height: rectSize);
+    var gridLinePaint = Paint();
+    gridLinePaint.style = PaintingStyle.fill;
+    gridLinePaint.color = Colors.black;
+    gridLinePaint.strokeWidth = 2.1;
+    gridLinePaint.strokeCap = StrokeCap.square;
+    gridLinePaint.isAntiAlias = true;
+    drawGrid(rectSize, rect, canvas, gridLinePaint);
+
+  }
+
+  void drawGrid(double rectSize, Rect rect, Canvas canvas, Paint gridLinePaint) {
+    var dx = rectSize / (columnCount - 1);
+    var dy = rectSize / (rowCount - 1);
+    for (var i = 0; i < columnCount; i++) {
+      var nx = rect.left + i * dx;
+      canvas.drawLine(
+          Offset(nx, rect.top), Offset(nx, rect.bottom), gridLinePaint);
+    }
+    for (var i = 0; i < rowCount; i++) {
+      var ny = rect.top + i * dy;
+      canvas.drawLine(
+          Offset(rect.left, ny), Offset(rect.right, ny), gridLinePaint);
+    }
+    var tengen = rect.center;
+    var x4 = rect.left + 3 * dx;
+    var y4 = rect.top + 3 * dy;
+    var x15 = rect.right - 3 * dx;
+    var y15 = rect.bottom - 3 * dy;
+    canvas.drawCircle(Offset(x4,y4), 5.5, gridLinePaint);
+    canvas.drawCircle(Offset(x4,tengen.dy), 5.5, gridLinePaint);
+    canvas.drawCircle(Offset(x4,y15), 5.5, gridLinePaint);
+
+    canvas.drawCircle(Offset(tengen.dx,y4), 5.5, gridLinePaint);
+    canvas.drawCircle(Offset(tengen.dx,tengen.dy), 5.5, gridLinePaint);
+    canvas.drawCircle(Offset(tengen.dx,y15), 5.5, gridLinePaint);
+
+    canvas.drawCircle(Offset(x15,y4), 5.5, gridLinePaint);
+    canvas.drawCircle(Offset(x15,tengen.dy), 5.5, gridLinePaint);
+    canvas.drawCircle(Offset(x15,y15), 5.5, gridLinePaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
