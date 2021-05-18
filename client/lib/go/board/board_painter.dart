@@ -50,7 +50,9 @@ class BoardPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    this.components.any((element) => element.shouldRepaint(oldDelegate));
+  }
 }
 
 abstract class BoardPaintable {
@@ -59,4 +61,6 @@ abstract class BoardPaintable {
   BoardPaintable(this.priority);
 
   void draw(Canvas canvas, BoardCoordinatesManager coordMngr);
+
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:play_go_client/go/board/board_coordinates_manager.dart';
+import 'package:play_go_client/go/board/layout.dart';
 
 class BoardTheme {
   final BoardRefType refType = BoardRefType();
@@ -10,6 +12,7 @@ class BoardTheme {
     ..strokeWidth = 2.1
     ..strokeCap = StrokeCap.square
     ..isAntiAlias = true;
+  final StoneDrawers stoneDrawers = StoneDrawers();
 
   Paint inkLinesPaint() {
     return this.inkLinesStyle;
@@ -38,8 +41,17 @@ class BoardTheme {
         fontFamily: "Futura");
   }
 
-  ImageProvider loadBackgroundImage() {
-    return AssetImage("assets/textures/shinkaya2.jpg");
+  Widget background() {
+    return Image(
+        image: AssetImage("assets/textures/shinkaya2.jpg"),
+        alignment: Alignment.center,
+        height: double.infinity,
+        width: double.infinity,
+        fit: BoxFit.contain);
+  }
+
+  StoneDrawers stones() {
+    return stoneDrawers;
   }
 }
 
@@ -47,6 +59,55 @@ class BoardRefType {
   String toText(int position) {
     return position.toString();
   }
+}
+
+abstract class StoneDrawer {
+  void draw(Canvas canvas, BoardCoordinatesManager coordinatesManager,
+      BoardCoordinate coordinate);
+}
+
+class WhiteStoneDrawer extends StoneDrawer {
+  final Paint fillWhite = Paint()
+    ..color = Colors.white
+    ..style = PaintingStyle.fill
+    ..isAntiAlias = false;
+  final Paint strokeBlack = Paint()
+    ..color = Colors.black
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2
+    ..isAntiAlias = true;
+
+  WhiteStoneDrawer();
+
+  @override
+  void draw(Canvas canvas, BoardCoordinatesManager coordinatesManager,
+      BoardCoordinate coordinate) {
+    var offset = coordinatesManager.fromCoordinate(coordinate);
+    canvas.drawCircle(offset, coordinatesManager.cellHeight * 0.485, fillWhite);
+    canvas.drawCircle(
+        offset, coordinatesManager.cellHeight * 0.485, strokeBlack);
+  }
+}
+
+class BlackStoneDrawer extends StoneDrawer {
+  final Paint fillBlack = Paint()
+    ..color = Colors.black
+    ..style = PaintingStyle.stroke
+    ..isAntiAlias = true;
+
+  BlackStoneDrawer();
+
+  @override
+  void draw(Canvas canvas, BoardCoordinatesManager coordinatesManager,
+      BoardCoordinate coordinate) {
+    var offset = coordinatesManager.fromCoordinate(coordinate);
+    canvas.drawCircle(offset, coordinatesManager.cellHeight * 0.485, fillBlack);
+  }
+}
+
+class StoneDrawers {
+  final StoneDrawer white = WhiteStoneDrawer();
+  final StoneDrawer black = BlackStoneDrawer();
 }
 
 class BoardThemes {

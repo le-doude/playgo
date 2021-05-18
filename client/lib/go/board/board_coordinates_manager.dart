@@ -42,6 +42,10 @@ class BoardCoordinatesManager {
     return this.columns[x][y];
   }
 
+  Offset fromCoordinate(BoardCoordinate coord) {
+    return get(coord.column, coord.row);
+  }
+
   List<Offset> column(int column) {
     return this.columns[column];
   }

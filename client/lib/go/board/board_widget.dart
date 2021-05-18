@@ -15,7 +15,7 @@ class BoardWidget extends StatelessWidget {
     var stack = Stack(
       alignment: AlignmentDirectional.center,
       children: [
-        backgroundImage(),
+        this.theme.background(),
         CustomPaint(
             painter: BoardPainter(
                 this.layout,
@@ -24,14 +24,5 @@ class BoardWidget extends StatelessWidget {
       ],
     );
     return AspectRatio(aspectRatio: 1.0, child: stack);
-  }
-
-  Widget backgroundImage() {
-    return Image(
-        image: this.theme.loadBackgroundImage(),
-        alignment: Alignment.center,
-        height: double.infinity,
-        width: double.infinity,
-        fit: BoxFit.contain);
   }
 }
