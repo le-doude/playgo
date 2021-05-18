@@ -6,8 +6,9 @@ import 'board_painter.dart';
 
 class BoardWidget extends StatelessWidget {
   final Layout layout;
+  final BoardTheme theme;
 
-  BoardWidget(this.layout);
+  BoardWidget(this.layout, this.theme);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,9 @@ class BoardWidget extends StatelessWidget {
       children: [
         backgroundImage(),
         CustomPaint(
-            painter: BoardPainter(this.layout, BoardThemes.DEFAUT),
+            painter: BoardPainter(
+                this.layout,
+                this.theme),
             child: Container()),
       ],
     );
@@ -25,7 +28,7 @@ class BoardWidget extends StatelessWidget {
 
   Widget backgroundImage() {
     return Image(
-        image: AssetImage("assets/textures/shinkaya2.jpg"),
+        image: this.theme.loadBackgroundImage(),
         alignment: Alignment.center,
         height: double.infinity,
         width: double.infinity,

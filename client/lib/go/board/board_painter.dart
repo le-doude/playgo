@@ -11,20 +11,32 @@ import 'board_coordinates_manager.dart';
 import 'layout.dart';
 
 class BoardPainter extends CustomPainter {
+  static const List<BoardPaintable> EMPTY = [];
   final Layout layout;
   final BoardTheme theme;
+  final List<BoardPaintable> components = List.empty(growable: true);
   BoardGridDrawer boardGridDrawer;
   BoardStarPointsDrawer boardStarPointsDrawer;
   BoardReferencesDrawer boardReferencesDrawer;
 
-  BoardPainter(this.layout, this.theme) {
-    this.boardGridDrawer = BoardGridDrawer(layout, theme);
-    this.boardStarPointsDrawer = BoardStarPointsDrawer(layout, theme);
-    this.boardReferencesDrawer = BoardReferencesDrawer(layout, theme);
+  BoardPainter(this.layout, this.theme,
+      {List<BoardPaintable> layeredComponents = EMPTY}) {
+    this.components.add(BoardGridDrawer(layout, theme));
+    this.components.add(BoardStarPointsDrawer(layout, theme));
+    this.components.add(BoardReferencesDrawer(layout, theme));
+    this.components.addAll(layeredComponents);
+    this.components.sort((l, r) => l.priority.compareTo(r.priority));
   }
 
   @override
   void paint(Canvas canvas, Size size) {
+    BoardCoordinatesManager coord = computeLayoutCoordinates(size);
+    this.components.forEach((element) {
+      element.draw(canvas, coord);
+    });
+  }
+
+  BoardCoordinatesManager computeLayoutCoordinates(Size size) {
     var center = Offset(size.width / 2, size.height / 2);
     var frameSize = min(size.height, size.width);
     var frameRect =
@@ -32,61 +44,19 @@ class BoardPainter extends CustomPainter {
     var gridSize = frameSize * 0.9;
     var gridRect =
         Rect.fromCenter(center: center, width: gridSize, height: gridSize);
-    BoardCoordinatesManager intersections = calculateAllCenters(frameRect, gridRect);
-    this.boardGridDrawer.drawOn(canvas, intersections);
-    this.boardStarPointsDrawer.drawOn(canvas, intersections);
-    this.boardReferencesDrawer.drawOn(canvas, intersections);
-    drawSomeStones(canvas, intersections);
+    BoardCoordinatesManager coord = BoardCoordinatesManager(
+        outerFrame: frameRect, innerFrame: gridRect, layout: this.layout);
+    return coord;
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
 
-  void drawCoordText(Canvas canvas, Rect gridRect) {
-    builder();
-  }
+abstract class BoardPaintable {
+  final int priority;
 
-  ParagraphBuilder builder() {
-    return ParagraphBuilder(ParagraphStyle(
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-      maxLines: 1,
-      fontFamily: "Arial",
-      fontSize: 10,
-      height: 10,
-    ));
-  }
+  BoardPaintable(this.priority);
 
-  BoardCoordinatesManager calculateAllCenters(Rect outer, Rect inner) {
-    return BoardCoordinatesManager(
-        outerFrame: outer, innerFrame: inner, layout: this.layout);
-  }
-
-  void drawGridReference(Canvas canvas, BoardCoordinatesManager intersections,
-      Rect outerFrame, Rect innerFrame) {
-    this.boardReferencesDrawer.drawOn(canvas, intersections);
-  }
-
-  void drawSomeStones(Canvas canvas, BoardCoordinatesManager intersections) {
-    var radius = intersections.cellHeight / 2.15;
-    canvas.drawCircle(intersections.get(0, 0), radius, white());
-    canvas.drawCircle(intersections.get(0, 1), radius, black());
-    canvas.drawCircle(intersections.get(5, 0), radius, white());
-    canvas.drawCircle(intersections.get(3, 3), radius, black());
-    canvas.drawCircle(intersections.get(8, 8), radius, white());
-  }
-
-  Paint white() {
-    var paint = Paint();
-    paint.color = Colors.white;
-    paint.style = PaintingStyle.fill;
-    return paint;
-  }
-
-  Paint black() {
-    var paint = Paint();
-    paint.color = Colors.black;
-    paint.style = PaintingStyle.fill;
-    return paint;
-  }
+  void draw(Canvas canvas, BoardCoordinatesManager coordMngr);
 }

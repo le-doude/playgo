@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:play_go_client/go/board/board_widget.dart';
 import 'package:play_go_client/go/board/layout.dart';
+import 'package:play_go_client/go/board/theme.dart';
 
 void main() {
   runApp(PlayGoClientApp());
@@ -77,7 +78,9 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
       ),
       body: Container(
           padding: EdgeInsets.all(10),
-          child: Center(child: BoardWidget(Layouts.STANDARD_19_BY_19))),
+          child: Center(
+              child:
+                  BoardWidget(Layouts.STANDARD_19_BY_19, BoardThemes.DEFAUT))),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',

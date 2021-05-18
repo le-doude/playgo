@@ -37,6 +37,10 @@ class BoardTheme {
         fontSize: intersectionSize / 2,
         fontFamily: "Futura");
   }
+
+  ImageProvider loadBackgroundImage() {
+    return AssetImage("assets/textures/shinkaya2.jpg");
+  }
 }
 
 class BoardRefType {

@@ -1,20 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:play_go_client/go/board/board_painter.dart';
 import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/theme.dart';
 
 import 'board_coordinates_manager.dart';
 
-class BoardReferencesDrawer {
+class BoardReferencesDrawer extends BoardPaintable{
   static final Logger logger = Logger();
 
   final Layout layout;
   final BoardTheme theme;
 
-  BoardReferencesDrawer(this.layout, this.theme);
+  BoardReferencesDrawer(this.layout, this.theme) : super(2);
 
-  void drawOn(Canvas canvas, BoardCoordinatesManager intersections) {
+  void draw(Canvas canvas, BoardCoordinatesManager intersections) {
     var top = intersections.outerFrame.top +
         intersections.innerFrame.top ;
     top /= 2;

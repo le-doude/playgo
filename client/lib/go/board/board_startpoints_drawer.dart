@@ -1,16 +1,17 @@
 import 'package:flutter/cupertino.dart';
+import 'package:play_go_client/go/board/board_painter.dart';
 import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/theme.dart';
 
 import 'board_coordinates_manager.dart';
 
-class BoardStarPointsDrawer {
+class BoardStarPointsDrawer extends BoardPaintable{
   final Layout layout;
   final BoardTheme theme;
 
-  BoardStarPointsDrawer(this.layout, this.theme);
+  BoardStarPointsDrawer(this.layout, this.theme) : super(1);
 
-  void drawOn(Canvas canvas, BoardCoordinatesManager intersections) {
+  void draw(Canvas canvas, BoardCoordinatesManager intersections) {
     var paint = this.theme.inkLinesPaint();
     var radius = this.theme.startPointSize();
     this.layout.startPoints.forEach((point) {
