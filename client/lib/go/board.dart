@@ -7,7 +7,7 @@ import 'rules/start_condition.dart';
 class Board extends StatefulWidget {
   final Layout layout;
   final StartCondition startCondition;
-  final Theme theme;
+  final BoardTheme theme;
 
   const Board({Key key, this.layout, this.startCondition, this.theme})
       : super(key: key);
