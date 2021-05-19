@@ -14,11 +14,11 @@ class Layouts {
     BoardCoordinate(15, 3),
     BoardCoordinate(3, 15),
     BoardCoordinate(15, 15),
-    BoardCoordinate(8, 8),
-    BoardCoordinate(15, 8),
-    BoardCoordinate(3, 8),
-    BoardCoordinate(8, 15),
-    BoardCoordinate(8, 3),
+    BoardCoordinate(9, 9),
+    BoardCoordinate(15, 9),
+    BoardCoordinate(3, 9),
+    BoardCoordinate(9, 15),
+    BoardCoordinate(9, 3),
   ]);
   static final Layout STANDARD_13_BY_13 = Layout(13, 13, [
     BoardCoordinate(3, 3),

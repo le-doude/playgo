@@ -15,10 +15,10 @@ class BoardGridDrawer extends BoardLayer{
   @override
   void draw(Canvas canvas, BoardCoordinatesManager coordMngr) {
     var paint = this.theme.inkLinesPaint();
-    coordMngr.columns.forEach((column) {
+    coordMngr.columnEdgeVertices().forEach((column) {
       canvas.drawLine(column.first, column.last, paint);
     });
-    coordMngr.rows.forEach((row) {
+    coordMngr.rowEdgeVertices().forEach((row) {
       canvas.drawLine(row.first, row.last, paint);
     });
   }

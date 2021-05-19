@@ -10,23 +10,28 @@ import 'package:play_go_client/go/board/theme.dart';
 class StonesPreviewPainter extends BoardLayer {
   final Board board;
   final BoardTheme theme;
-  final String color;
+  Stone? _stone;
   BoardCoordinate? _current;
 
-  void preview(BoardCoordinate coord) {
-    if (this.board.canPlace(Stone(color: color), coord)) {
+  void preview(Stone stone, BoardCoordinate coord) {
+    if (this.board.canPlace(stone, coord)) {
+      this._stone = stone;
       this._current = coord;
     }
   }
 
-  StonesPreviewPainter(this.board, this.theme,  this.color)
-      : super(25);
+  StonesPreviewPainter(this.board, this.theme) : super(25);
 
   @override
   void draw(Canvas canvas, BoardCoordinatesManager coordMngr) {
-    if (_current != null) {
-      var drawer = this.theme.stoneDrawers.drawerForColor(this.color);
+    if (_current != null && _stone != null) {
+      var drawer = this.theme.stoneDrawers.drawerForColor(this._stone!.color);
       drawer.draw(canvas, coordMngr, _current!, preview: true);
     }
+  }
+
+  void clear() {
+    this._stone = null;
+    this._current = null;
   }
 }
