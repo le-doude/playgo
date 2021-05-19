@@ -7,7 +7,7 @@ import 'package:play_go_client/go/board/theme.dart';
 
 import 'board_coordinates_manager.dart';
 
-class BoardReferencesDrawer extends BoardPaintable{
+class BoardReferencesDrawer extends BoardLayer{
   static final Logger logger = Logger();
 
   final Layout layout;

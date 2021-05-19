@@ -1,38 +1,41 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:play_go_client/go/board.dart';
 import 'package:play_go_client/go/board/board_grid_drawer.dart';
 import 'package:play_go_client/go/board/board_references_drawer.dart';
 import 'package:play_go_client/go/board/board_startpoints_drawer.dart';
+import 'package:play_go_client/go/board/stones_drawer.dart';
+import 'package:play_go_client/go/board/stones_preview_painter.dart';
 import 'package:play_go_client/go/board/theme.dart';
 
 import 'board_coordinates_manager.dart';
-import 'layout.dart';
 
 class BoardPainter extends CustomPainter {
   static final Logger logger = Logger();
-  static const List<BoardPaintable> EMPTY = [];
-  final Layout layout;
+  final Board board;
   final BoardTheme theme;
-  final List<BoardPaintable> components = List.empty(growable: true);
+  final List<BoardLayer> layers = List.empty(growable: true);
 
-  BoardPainter(this.layout, this.theme,
-      {List<BoardPaintable> layeredComponents = EMPTY}) {
-    this.components.add(BoardGridDrawer(layout, theme));
-    this.components.add(BoardStarPointsDrawer(layout, theme));
-    this.components.add(BoardReferencesDrawer(layout, theme));
-    this.components.addAll(layeredComponents);
-    this.components.sort((l, r) => l.priority.compareTo(r.priority));
+  BoardPainter(Listenable? repaint, this.board, this.theme,
+      {List<BoardLayer>? layeredComponents})
+      : super(repaint: repaint) {
+    this.layers.add(BoardGridDrawer(this.board.layout, theme));
+    this.layers.add(BoardStarPointsDrawer(this.board.layout, theme));
+    this.layers.add(BoardReferencesDrawer(this.board.layout, theme));
+    this.layers.add(StonesPainter(this.board, theme));
+    this.layers.add(StonesPreviewPainter(this.board, theme, "white"));
+    this.layers.addAll(layeredComponents ?? []);
+    this.layers.sort((l, r) => l.priority.compareTo(r.priority));
   }
 
   @override
   void paint(Canvas canvas, Size size) {
     BoardCoordinatesManager coord = computeLayoutCoordinates(size);
-    this.components.forEach((component) {
-      logger.d(
-          "drawing ${component.runtimeType}[priority: ${component.priority}]");
+    this.layers.forEach((component) {
       component.draw(canvas, coord);
     });
   }
@@ -46,23 +49,18 @@ class BoardPainter extends CustomPainter {
     var gridRect =
         Rect.fromCenter(center: center, width: gridSize, height: gridSize);
     BoardCoordinatesManager coord = BoardCoordinatesManager(
-        outerFrame: frameRect, innerFrame: gridRect, layout: this.layout);
+        outerFrame: frameRect, innerFrame: gridRect, layout: this.board.layout);
     return coord;
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return this.components.any(
-        (BoardPaintable component) => component.shouldRepaint(oldDelegate));
-  }
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-abstract class BoardPaintable {
+abstract class BoardLayer {
   final int priority;
 
-  BoardPaintable(this.priority);
+  BoardLayer(this.priority);
 
   void draw(Canvas canvas, BoardCoordinatesManager coordMngr);
-
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

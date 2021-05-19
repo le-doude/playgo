@@ -5,7 +5,7 @@ import 'package:play_go_client/go/board/theme.dart';
 
 import 'board_coordinates_manager.dart';
 
-class BoardStarPointsDrawer extends BoardPaintable{
+class BoardStarPointsDrawer extends BoardLayer{
   final Layout layout;
   final BoardTheme theme;
 
