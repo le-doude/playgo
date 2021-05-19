@@ -15,9 +15,6 @@ class BoardPainter extends CustomPainter {
   final Layout layout;
   final BoardTheme theme;
   final List<BoardPaintable> components = List.empty(growable: true);
-  BoardGridDrawer boardGridDrawer;
-  BoardStarPointsDrawer boardStarPointsDrawer;
-  BoardReferencesDrawer boardReferencesDrawer;
 
   BoardPainter(this.layout, this.theme,
       {List<BoardPaintable> layeredComponents = EMPTY}) {
@@ -51,7 +48,8 @@ class BoardPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    this.components.any((element) => element.shouldRepaint(oldDelegate));
+    return this.components.any(
+        (BoardPaintable component) => component.shouldRepaint(oldDelegate));
   }
 }
 

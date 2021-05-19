@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class Layout {
   final int columns;
   final int rows;
@@ -35,8 +37,46 @@ class Layouts {
 }
 
 class BoardCoordinate {
-  final int column;
-  final int row;
+  late final int column;
+  late final int row;
 
-  BoardCoordinate(this.column, this.row);
+  BoardCoordinate(int column, int row) {
+    this.column = column;
+    this.row = row;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BoardCoordinate &&
+          runtimeType == other.runtimeType &&
+          column == other.column &&
+          row == other.row;
+
+  @override
+  int get hashCode => column.hashCode ^ row.hashCode;
+
+  BoardCoordinate? up() {
+    return fromCurrent(0, -1);
+  }
+
+  BoardCoordinate? down() {
+    return fromCurrent(0, 1);
+  }
+
+  BoardCoordinate? left() {
+    return fromCurrent(-1, 0);
+  }
+
+  BoardCoordinate? right() {
+    return fromCurrent(1, 0);
+  }
+
+  BoardCoordinate? fromCurrent(int xIncr, int yIncr) {
+    var x = column + xIncr;
+    var y = row + yIncr;
+    return BoardCoordinate(x, y);
+  }
 }
+
+class InvalidCoordinatesError {}

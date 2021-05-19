@@ -83,16 +83,16 @@ class WhiteStoneDrawer extends StoneDrawer {
   void draw(Canvas canvas, BoardCoordinatesManager coordinatesManager,
       BoardCoordinate coordinate) {
     var offset = coordinatesManager.fromCoordinate(coordinate);
-    canvas.drawCircle(offset, coordinatesManager.cellHeight * 0.485, fillWhite);
+    canvas.drawCircle(offset, coordinatesManager.cellHeight * 0.46, fillWhite);
     canvas.drawCircle(
-        offset, coordinatesManager.cellHeight * 0.485, strokeBlack);
+        offset, coordinatesManager.cellHeight * 0.46, strokeBlack);
   }
 }
 
 class BlackStoneDrawer extends StoneDrawer {
   final Paint fillBlack = Paint()
     ..color = Colors.black
-    ..style = PaintingStyle.stroke
+    ..style = PaintingStyle.fill
     ..isAntiAlias = true;
 
   BlackStoneDrawer();
@@ -101,13 +101,31 @@ class BlackStoneDrawer extends StoneDrawer {
   void draw(Canvas canvas, BoardCoordinatesManager coordinatesManager,
       BoardCoordinate coordinate) {
     var offset = coordinatesManager.fromCoordinate(coordinate);
-    canvas.drawCircle(offset, coordinatesManager.cellHeight * 0.485, fillBlack);
+    canvas.drawCircle(offset, coordinatesManager.cellHeight * 0.46, fillBlack);
   }
+}
+
+class NoopDrawer extends StoneDrawer {
+  @override
+  void draw(Canvas canvas, BoardCoordinatesManager coordinatesManager, BoardCoordinate coordinate) {
+  }
+
 }
 
 class StoneDrawers {
   final StoneDrawer white = WhiteStoneDrawer();
   final StoneDrawer black = BlackStoneDrawer();
+  final StoneDrawer noop = NoopDrawer();
+
+  StoneDrawer drawerForColor(String? color) {
+    if(color == "white") {
+      return white;
+    }
+    if(color == "black") {
+      return black;
+    }
+    return noop;
+  }
 }
 
 class BoardThemes {

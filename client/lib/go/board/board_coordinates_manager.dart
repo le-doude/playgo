@@ -4,15 +4,18 @@ import 'dart:ui';
 import 'layout.dart';
 
 class BoardCoordinatesManager {
-  Rect outerFrame;
-  Rect innerFrame;
-  Layout layout;
-  List<List<Offset>> columns;
-  List<List<Offset>> rows;
-  double cellWidth;
-  double cellHeight;
+  late final Rect outerFrame;
+  late final Rect innerFrame;
+  late final Layout layout;
+  late final List<List<Offset>> columns;
+  late final List<List<Offset>> rows;
+  late final double cellWidth;
+  late final double cellHeight;
 
-  BoardCoordinatesManager({Rect outerFrame, Rect innerFrame, Layout layout}) {
+  BoardCoordinatesManager(
+      {required Rect outerFrame,
+      required Rect innerFrame,
+      required Layout layout}) {
     this.outerFrame = outerFrame;
     this.innerFrame = innerFrame;
     this.layout = layout;
@@ -56,10 +59,13 @@ class BoardCoordinatesManager {
 
   BoardCoordinate from(Offset eventCoord) {
     if (!innerFrame.contains(eventCoord)) {
-      return null;
+      throw OutOfBoardOffsetError();
     }
     int i = eventCoord.dx ~/ cellWidth;
     int j = eventCoord.dy ~/ cellHeight;
     return BoardCoordinate(i, j);
   }
+}
+
+class OutOfBoardOffsetError {
 }
