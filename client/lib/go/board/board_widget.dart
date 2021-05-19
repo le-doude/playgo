@@ -1,7 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:play_go_client/go/board.dart';
 import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/stones_drawer.dart';
+import 'package:play_go_client/go/board/stones_preview_painter.dart';
 import 'package:play_go_client/go/board/theme.dart';
 
 import 'board_painter.dart';
@@ -24,14 +26,15 @@ class BoardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var board = Board(
         this.layout, NoKoPredicate, NoopCaptureCallback, NoopMoveCallback);
+    var stonesPainter = StonesPainter(layout, theme, board);
+    var stonesPreviewer = StonesPreviewPainter(layout, theme, board, "white");
+    var boardPainter = BoardPainter(this.layout, this.theme,
+        layeredComponents: [stonesPainter, stonesPreviewer]);
     var stack = Stack(
       alignment: AlignmentDirectional.center,
       children: [
         this.theme.background(),
-        CustomPaint(
-            painter: BoardPainter(this.layout, this.theme,
-                layeredComponents: [StonesDrawer(layout, theme, board)]),
-            child: Container()),
+        CustomPaint(painter: boardPainter, child: Container()),
       ],
     );
 
@@ -48,6 +51,9 @@ class BoardWidget extends StatelessWidget {
     board.place(Stone(color: "black"), BoardCoordinate(10, 11));
     board.place(Stone(color: "black"), BoardCoordinate(10, 12));
     board.place(Stone(color: "black"), BoardCoordinate(11, 12));
+
+    stonesPreviewer.preview(BoardCoordinate(8, 8));
+
     return AspectRatio(aspectRatio: 1.0, child: stack);
   }
 }

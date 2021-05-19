@@ -8,13 +8,13 @@ import 'package:play_go_client/go/board/theme.dart';
 
 import 'board_painter.dart';
 
-class StonesDrawer extends BoardPaintable {
+class StonesPainter extends BoardPaintable {
   final Layout layout;
   final BoardTheme theme;
   final Board board;
   List<int> previousRenderedImage = List.empty();
 
-  StonesDrawer(this.layout, this.theme, this.board) : super(20);
+  StonesPainter(this.layout, this.theme, this.board) : super(20);
 
   @override
   void draw(Canvas canvas, BoardCoordinatesManager coordMngr) {

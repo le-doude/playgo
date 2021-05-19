@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:play_go_client/go/board/board_grid_drawer.dart';
 import 'package:play_go_client/go/board/board_references_drawer.dart';
 import 'package:play_go_client/go/board/board_startpoints_drawer.dart';
@@ -11,6 +12,7 @@ import 'board_coordinates_manager.dart';
 import 'layout.dart';
 
 class BoardPainter extends CustomPainter {
+  static final Logger logger = Logger();
   static const List<BoardPaintable> EMPTY = [];
   final Layout layout;
   final BoardTheme theme;
@@ -28,8 +30,10 @@ class BoardPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     BoardCoordinatesManager coord = computeLayoutCoordinates(size);
-    this.components.forEach((element) {
-      element.draw(canvas, coord);
+    this.components.forEach((component) {
+      logger.d(
+          "drawing ${component.runtimeType}[priority: ${component.priority}]");
+      component.draw(canvas, coord);
     });
   }
 

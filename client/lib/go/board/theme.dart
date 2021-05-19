@@ -63,7 +63,8 @@ class BoardRefType {
 
 abstract class StoneDrawer {
   void draw(Canvas canvas, BoardCoordinatesManager coordinatesManager,
-      BoardCoordinate coordinate);
+      BoardCoordinate coordinate,
+      {bool preview = false});
 }
 
 class WhiteStoneDrawer extends StoneDrawer {
@@ -81,11 +82,12 @@ class WhiteStoneDrawer extends StoneDrawer {
 
   @override
   void draw(Canvas canvas, BoardCoordinatesManager coordinatesManager,
-      BoardCoordinate coordinate) {
+      BoardCoordinate coordinate,
+      {bool preview = false}) {
     var offset = coordinatesManager.fromCoordinate(coordinate);
-    canvas.drawCircle(offset, coordinatesManager.cellHeight * 0.46, fillWhite);
-    canvas.drawCircle(
-        offset, coordinatesManager.cellHeight * 0.46, strokeBlack);
+    var radius = coordinatesManager.cellHeight * (preview ? 0.3 : 0.46);
+    canvas.drawCircle(offset, radius, fillWhite);
+    canvas.drawCircle(offset, radius, strokeBlack);
   }
 }
 
@@ -99,17 +101,19 @@ class BlackStoneDrawer extends StoneDrawer {
 
   @override
   void draw(Canvas canvas, BoardCoordinatesManager coordinatesManager,
-      BoardCoordinate coordinate) {
+      BoardCoordinate coordinate,
+      {bool preview = false}) {
     var offset = coordinatesManager.fromCoordinate(coordinate);
-    canvas.drawCircle(offset, coordinatesManager.cellHeight * 0.46, fillBlack);
+    var radius = coordinatesManager.cellHeight * (preview ? 0.3 : 0.46);
+    canvas.drawCircle(offset, radius, fillBlack);
   }
 }
 
 class NoopDrawer extends StoneDrawer {
   @override
-  void draw(Canvas canvas, BoardCoordinatesManager coordinatesManager, BoardCoordinate coordinate) {
-  }
-
+  void draw(Canvas canvas, BoardCoordinatesManager coordinatesManager,
+      BoardCoordinate coordinate,
+      {bool preview = false}) {}
 }
 
 class StoneDrawers {
@@ -118,10 +122,10 @@ class StoneDrawers {
   final StoneDrawer noop = NoopDrawer();
 
   StoneDrawer drawerForColor(String? color) {
-    if(color == "white") {
+    if (color == "white") {
       return white;
     }
-    if(color == "black") {
+    if (color == "black") {
       return black;
     }
     return noop;
