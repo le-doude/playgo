@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:play_go_client/go/board/board_widget.dart';
+import 'package:play_go_client/go/board/widget/board_widget.dart';
 import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/theme.dart';
 

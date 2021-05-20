@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:play_go_client/go/board/board_painter.dart';
 import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/theme.dart';
+import 'package:play_go_client/go/board/widget/painter/board_coordinates_manager.dart';
+import 'package:play_go_client/go/board/widget/painter/board_painter.dart';
 
-import 'board_coordinates_manager.dart';
 
 class BoardStarPointsDrawer extends BoardLayer{
   final Layout layout;

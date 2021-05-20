@@ -5,15 +5,15 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:play_go_client/go/board.dart';
-import 'package:play_go_client/go/board/board_grid_drawer.dart';
-import 'package:play_go_client/go/board/board_references_drawer.dart';
-import 'package:play_go_client/go/board/board_startpoints_drawer.dart';
 import 'package:play_go_client/go/board/layout.dart';
-import 'package:play_go_client/go/board/stones_drawer.dart';
-import 'package:play_go_client/go/board/stones_preview_painter.dart';
 import 'package:play_go_client/go/board/theme.dart';
 
 import 'board_coordinates_manager.dart';
+import 'layers/board_grid_drawer.dart';
+import 'layers/board_references_drawer.dart';
+import 'layers/board_startpoints_drawer.dart';
+import 'layers/stones_drawer.dart';
+import 'layers/stones_preview_painter.dart';
 
 class BoardPainter extends CustomPainter {
   static final Logger logger = Logger();

@@ -2,10 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:play_go_client/go/board.dart';
-import 'package:play_go_client/go/board/board_coordinates_manager.dart';
-import 'package:play_go_client/go/board/board_painter.dart';
+import 'package:play_go_client/go/board/widget/painter/board_coordinates_manager.dart';
 import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/theme.dart';
+import 'package:play_go_client/go/board/widget/painter/board_painter.dart';
 
 class StonesPreviewPainter extends BoardLayer {
   final Board board;

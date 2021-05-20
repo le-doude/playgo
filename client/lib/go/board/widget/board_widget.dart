@@ -4,7 +4,8 @@ import 'package:play_go_client/go/board.dart';
 import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/theme.dart';
 
-import 'board_painter.dart';
+import 'painter/board_painter.dart';
+
 
 class BoardWidget extends StatelessWidget {
   static final Logger logger = Logger();
@@ -22,11 +23,8 @@ class BoardWidget extends StatelessWidget {
     var listener = Listener(
         onPointerHover: (event) =>
             boardPainter.onPointerHover(event.localPosition),
-        // onPointerCancel: (event) => logger.d(event.toString()),
-        // onPointerMove: (event) => logger.d(event.toString()),
-        // onPointerUp: (event) => logger.d(event.toString()),
-        onPointerUp: (event) => boardPainter.onPointerUp(event.localPosition),
-        // onPointerSignal: (event) => logger.d(event.toString()),
+        onPointerUp: (event) =>
+            boardPainter.onPointerUp(event.localPosition),
         child: customPaint);
     var stack = Stack(
       alignment: AlignmentDirectional.center,

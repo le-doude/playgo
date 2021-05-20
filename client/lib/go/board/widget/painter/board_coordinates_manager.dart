@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-import 'layout.dart';
+import '../../layout.dart';
 
 class BoardCoordinatesManager {
   static final Logger logger = Logger();
