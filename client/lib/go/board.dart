@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 
 import 'board/layout.dart';
@@ -12,7 +13,6 @@ class Board {
   final CaptureCallback onCapture;
   final MoveCallback onPlace;
   late final List<List<Intersection>> _intersections;
-  List<int>? _currentImage;
 
   Iterable<Intersection> get intersections =>
       _intersections.expand((element) => element);
@@ -45,31 +45,34 @@ class Board {
     if (canPlace(stone, coordinate)) {
       at(coordinate).place(stone);
       this.onPlace(stone, coordinate);
-      this._currentImage = null;
     }
+  }
+
+  void removeGroup(Group group) {
+    var stones = group.stones;
+    var intersections =
+        stones.map((e) => e.intersection).whereType<Intersection>().toSet();
+    if (stones.length != intersections.length) {
+      intersections.addAll(this
+          ._intersections
+          .expand((rows) => rows)
+          .where((i) => stones.any((s) => i.contains(s))));
+    }
+    intersections.forEach((i) => i.removeStone(process: false));
+  }
+
+  void removeStone(Stone stone) {
+    Intersection inter = stone.intersection != null
+        ? stone.intersection!
+        : this
+            ._intersections
+            .expand((rows) => rows)
+            .firstWhere((i) => i.contains(stone));
+    inter?.removeStone();
   }
 
   void _capture(Stone stone) {
     this.onCapture(stone);
-    this._currentImage = null;
-  }
-
-  List<int> image() {
-    if (this._currentImage == null) {
-      this._currentImage = List.from(_intersections
-          .expand((element) => element)
-          .map((e) => (e._stone?.color.hashCode ?? 0)));
-    }
-    return this._currentImage!;
-  }
-
-  List<int> imageWith(Stone stone, BoardCoordinate coordinate) {
-    return List.from(_intersections.expand((element) => element).map((e) {
-      if (e._coordinate == coordinate) {
-        return stone.color.hashCode;
-      }
-      return (e._stone?.color.hashCode ?? 0);
-    }));
   }
 }
 
@@ -79,6 +82,10 @@ class Intersection {
   final BoardCoordinate _coordinate;
   late final Set<Intersection> _neighbours;
   Stone? _stone;
+
+  bool contains(Stone stone) {
+    return stone.id == this._stone?.id;
+  }
 
   Intersection(this._board, this._layout, this._coordinate);
 
@@ -101,6 +108,18 @@ class Intersection {
     this._stone = stone;
     _updateGroups();
     _processLiberties();
+  }
+
+  Stone removeStone({bool process = true}) {
+    var old = this._stone!;
+    this._stone = null;
+    old.intersection = null;
+    if (process) {
+      Set<Stone> oldGroup = old.group.stones;
+      oldGroup.remove(old);
+      _remakeGroup(oldGroup);
+    }
+    return old;
   }
 
   void _processLiberties() {
@@ -182,6 +201,17 @@ class Intersection {
   }
 
   Stone? get maybeStone => _stone;
+
+  void _remakeGroup(Iterable<Stone> oldGroupStones) {
+    oldGroupStones.forEach((stone) {
+      stone.resetGroup();
+    });
+    oldGroupStones.forEach((stone) {
+      if (stone.intersection != null) {
+        stone.intersection!.place(stone);
+      }
+    });
+  }
 }
 
 class Stone {
@@ -211,6 +241,10 @@ class Stone {
 
   void _capture() {
     this.intersection!._capture();
+  }
+
+  void resetGroup() {
+    this.group = Group(stones: [this]);
   }
 }
 
