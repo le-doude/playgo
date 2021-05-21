@@ -20,15 +20,13 @@ class BoardPainter extends CustomPainter {
   final Board board;
   final BoardTheme theme;
   final List<BoardLayer> layers = List.empty(growable: true);
-  late final ChangeNotifier _changeNotifier;
   late final StonesPreviewPainter _previewLayer;
   BoardCoordinatesManager? _coordinatesManager;
 
   BoardCoordinatesManager get coordinatesManager => _coordinatesManager!;
 
-  BoardPainter(ChangeNotifier repaint, this.board, this.theme,
-      {List<BoardLayer>? layeredComponents})
-      : super(repaint: repaint) {
+  BoardPainter(this.board, this.theme, {List<BoardLayer>? layeredComponents})
+      : super(repaint: board) {
     this.layers.add(BoardGridDrawer(this.board.layout, theme));
     this.layers.add(BoardStarPointsDrawer(this.board.layout, theme));
     this.layers.add(BoardReferencesDrawer(this.board.layout, theme));
@@ -37,7 +35,6 @@ class BoardPainter extends CustomPainter {
     this.layers.add(_previewLayer);
     this.layers.addAll(layeredComponents ?? []);
     this.layers.sort((l, r) => l.priority.compareTo(r.priority));
-    this._changeNotifier = repaint;
   }
 
   @override
@@ -53,7 +50,7 @@ class BoardPainter extends CustomPainter {
     var frameSize = min(size.height, size.width);
     var frameRect =
         Rect.fromCenter(center: center, width: frameSize, height: frameSize);
-    var gridSize = frameSize * 0.9;
+    var gridSize = frameSize * (this.theme.drawReferences ? 0.9 : 1.0);
     var gridRect =
         Rect.fromCenter(center: center, width: gridSize, height: gridSize);
     BoardCoordinatesManager coord = BoardCoordinatesManager(
@@ -63,33 +60,6 @@ class BoardPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-
-  void onPointerUp(Offset localPosition) {
-    var mngr = this._coordinatesManager!;
-    if (mngr.isInFrame(localPosition)) {
-      BoardCoordinate coordinate = mngr.from(localPosition);
-      var stone = nextStone();
-      if (this.board.canPlace(stone, coordinate)) {
-        this.board.place(stone, coordinate);
-        this._previewLayer.clear();
-        this._changeNotifier.notifyListeners();
-      }
-    }
-  }
-
-  void onPointerHover(Offset localPosition) {
-    var mngr = this._coordinatesManager!;
-    if (mngr.isInFrame(localPosition)) {
-      BoardCoordinate coordinate = mngr.from(localPosition);
-      var stone = nextStone();
-      this._previewLayer.preview(stone, coordinate);
-      this._changeNotifier.notifyListeners();
-    }
-  }
-
-  Stone nextStone() {
-    return Stone(color: "white");
-  }
 }
 
 abstract class BoardLayer {

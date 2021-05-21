@@ -5,14 +5,20 @@ import 'package:play_go_client/go/board/widget/painter/board_coordinates_manager
 import 'package:play_go_client/go/board/layout.dart';
 
 class BoardTheme {
+  static const Color BLACK_ISH = Color.fromARGB(255, 30, 30, 15);
+
   final BoardRefType refType = BoardRefType();
   final Paint inkLinesStyle = Paint()
     ..style = PaintingStyle.fill
-    ..color = Colors.black.withOpacity(0.7)
+    ..color = BLACK_ISH
     ..strokeWidth = 2.1
     ..strokeCap = StrokeCap.square
     ..isAntiAlias = true;
   final StoneDrawers stoneDrawers = StoneDrawers();
+
+  double get aspectRatio => 42/43;
+
+  bool get drawReferences => true;
 
   Paint inkLinesPaint() {
     return this.inkLinesStyle;
@@ -36,7 +42,7 @@ class BoardTheme {
 
   TextStyle boardRefernceStyle(double intersectionSize) {
     return TextStyle(
-        color: Colors.black,
+        color: BLACK_ISH,
         fontSize: intersectionSize / 2,
         fontFamily: "Futura");
   }

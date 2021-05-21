@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:play_go_client/go/board/widget/board_widget.dart';
+import 'package:play_go_client/go/board.dart';
 import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/theme.dart';
+import 'package:play_go_client/go/board/widget/painter/board_renderer.dart';
 
 void main() {
   runApp(PlayGoClientApp());
@@ -70,6 +71,11 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    var board = Board(Layouts.STANDARD_19_BY_19);
+    var boardRenderer = BoardRenderer(board: board, theme: BoardThemes.DEFAUT);
+
+
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -80,7 +86,7 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
           padding: EdgeInsets.all(10),
           child: Center(
               child:
-                  BoardWidget(Layouts.STANDARD_19_BY_19, BoardThemes.DEFAUT))),
+                  boardRenderer)),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',

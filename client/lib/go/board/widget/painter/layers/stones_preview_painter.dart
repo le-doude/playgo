@@ -14,7 +14,7 @@ class StonesPreviewPainter extends BoardLayer {
   BoardCoordinate? _current;
 
   void preview(Stone stone, BoardCoordinate coord) {
-    if (this.board.canPlace(stone, coord)) {
+    if (this.board.at(coord).isEmpty()) {
       this._stone = stone;
       this._current = coord;
     }

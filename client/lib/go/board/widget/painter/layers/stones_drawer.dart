@@ -25,7 +25,7 @@ class StonesPainter extends BoardLayer {
   void renderIntersection(Canvas canvas, BoardCoordinatesManager coordMngr,
       Intersection intersection) {
     theme.stoneDrawers
-        .drawerForColor(intersection.maybeStone?.color)
+        .drawerForColor(intersection.stone?.color)
         .draw(canvas, coordMngr, intersection.coordinate);
   }
 }
