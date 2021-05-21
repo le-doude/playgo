@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/theme.dart';
-import 'package:play_go_client/go/board/widget/painter/board_painter.dart';
 
 import '../board_coordinates_manager.dart';
+import 'board_layer.dart';
 
-class BoardReferencesDrawer extends BoardLayer{
+class ReferencesLayer extends BoardLayer{
   static final Logger logger = Logger();
 
   final Layout layout;
   final BoardTheme theme;
 
-  BoardReferencesDrawer(this.layout, this.theme) : super(2);
+  ReferencesLayer(this.layout, this.theme) : super(2);
 
   void draw(Canvas canvas, BoardCoordinatesManager intersections) {
     if(!this.theme.drawReferences) {

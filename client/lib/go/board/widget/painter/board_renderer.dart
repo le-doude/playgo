@@ -3,17 +3,21 @@ import 'package:play_go_client/go/board.dart';
 import 'package:play_go_client/go/board/theme.dart';
 import 'package:play_go_client/go/board/widget/painter/board_coordinates_manager.dart';
 import 'package:play_go_client/go/board/widget/painter/board_painter.dart';
+import 'package:play_go_client/go/board/widget/painter/stones_painter.dart';
 
 class BoardRenderer extends StatelessWidget {
   final Board board;
   final BoardTheme theme;
-  late final BoardPainter _painter;
+  late final BoardPainter _boardPainter;
+  late final StonesPainter _stonesPainter;
 
-  BoardCoordinatesManager get coordinateManager => _painter.coordinatesManager;
+  BoardCoordinatesManager get coordinateManager =>
+      _boardPainter.coordinatesManager;
 
   BoardRenderer({Key? key, required this.board, required this.theme})
       : super(key: key) {
-    this._painter = BoardPainter(this.board, this.theme);
+    this._boardPainter = BoardPainter(this.board.layout, this.theme);
+    this._stonesPainter = StonesPainter(this.board, this.theme);
   }
 
   @override
@@ -24,7 +28,11 @@ class BoardRenderer extends StatelessWidget {
           alignment: AlignmentDirectional.center,
           children: [
             this.theme.background(),
-            CustomPaint(child: Container(), painter: this._painter),
+            CustomPaint(
+              child: Container(),
+              painter: this._boardPainter,
+              foregroundPainter: this._stonesPainter,
+            ),
           ],
         ));
   }
