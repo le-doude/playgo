@@ -1,11 +1,18 @@
 import 'dart:math';
 
+import 'package:play_go_client/go/board.dart';
+
 class Layout {
   final int columns;
   final int rows;
   final List<BoardCoordinate> startPoints;
 
   Layout(this.columns, this.rows, this.startPoints);
+
+  List<List<Intersection>> generateTable(Intersection Function(int column, int row) initIntersection) {
+    return List.generate(this.columns, (column) =>
+        List.generate(this.rows, (row) => initIntersection.call(column, row)));
+  }
 }
 
 class Layouts {
