@@ -73,6 +73,10 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     var board = Board(Layouts.STANDARD_19_BY_19);
+    board.place(Stone(color: "white"), BoardCoordinate(3, 3));
+    board.place(Stone(color: "black"), BoardCoordinate(15, 15));
+    board.place(Stone(color: "white"), BoardCoordinate(18, 18));
+
     var previewHolder =
         StonePreviewHolder(StonePreview("white", BoardCoordinate(9, 9)));
     var boardRenderer = BoardRenderer(

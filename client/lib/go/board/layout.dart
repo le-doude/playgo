@@ -9,9 +9,28 @@ class Layout {
 
   Layout(this.columns, this.rows, this.startPoints);
 
-  List<List<Intersection>> generateTable(Intersection Function(int column, int row) initIntersection) {
-    return List.generate(this.columns, (column) =>
-        List.generate(this.rows, (row) => initIntersection.call(column, row)));
+  List<List<Intersection>> generateTable(
+      Intersection Function(int column, int row) initIntersection) {
+    return List.generate(
+        this.columns,
+        (column) => List.generate(
+            this.rows, (row) => initIntersection.call(column, row)));
+  }
+
+  Set<BoardCoordinate> computeNeighbours(BoardCoordinate coordinate) {
+    return [
+      coordinate.translate(0, 1),
+      coordinate.translate(1, 0),
+      coordinate.translate(-1, 0),
+      coordinate.translate(0, -1),
+    ].where((e) => this.includes(e)).toSet();
+  }
+
+  bool includes(BoardCoordinate coordinate) {
+    return 0 <= coordinate.column &&
+        coordinate.column < this.columns &&
+        0 <= coordinate.row &&
+        coordinate.row < this.rows;
   }
 }
 
@@ -63,23 +82,7 @@ class BoardCoordinate {
   @override
   int get hashCode => column.hashCode ^ row.hashCode;
 
-  BoardCoordinate? up() {
-    return fromCurrent(0, -1);
-  }
-
-  BoardCoordinate? down() {
-    return fromCurrent(0, 1);
-  }
-
-  BoardCoordinate? left() {
-    return fromCurrent(-1, 0);
-  }
-
-  BoardCoordinate? right() {
-    return fromCurrent(1, 0);
-  }
-
-  BoardCoordinate? fromCurrent(int xIncr, int yIncr) {
+  BoardCoordinate translate(int xIncr, int yIncr) {
     var x = column + xIncr;
     var y = row + yIncr;
     return BoardCoordinate(x, y);

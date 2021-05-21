@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 
 import 'board/layout.dart';
@@ -82,12 +83,10 @@ class Intersection {
   Intersection(this._board, this._layout, this._coordinate);
 
   void _linkNeighbours() {
-    var temp = List.empty(growable: true);
-    if (!isOnTopEdge()) temp.add(_board.at(_coordinate..up()));
-    if (!isOnBottomEdge()) temp.add(_board.at(_coordinate..down()));
-    if (!isOnLeftEdge()) temp.add(_board.at(_coordinate..left()));
-    if (!isOnRightEdge()) temp.add(_board.at(_coordinate..right()));
-    _neighbours = Set.unmodifiable(temp.whereType<Intersection>());
+    var temp = _layout
+        .computeNeighbours(this._coordinate)
+        .map((e) => this._board.at(e));
+    _neighbours = Set.unmodifiable(temp);
   }
 
   void place(Stone stone) {
@@ -109,43 +108,17 @@ class Intersection {
 
   void _updateGroups() {
     _neighbours.forEach((neighbour) {
-      if (this._stone!.color != neighbour._stone?.color) {
+      if (this.present &&
+          neighbour.present &&
+          this._stone!.color != neighbour._stone?.color) {
         this._stone!.link(neighbour._stone!);
       }
     });
   }
 
-  bool isCorner() {
-    return isOnVerticalEdge() && isOnHorizontalEdge();
-  }
+  bool get empty => _stone == null;
 
-  bool isEdge() {
-    return isOnVerticalEdge() ^ isOnHorizontalEdge();
-  }
-
-  bool isOnHorizontalEdge() {
-    return (isOnTopEdge() || isOnBottomEdge());
-  }
-
-  bool isOnTopEdge() => this._coordinate.row == 0;
-
-  bool isOnBottomEdge() => this._coordinate.row == this._layout.rows - 1;
-
-  bool isOnVerticalEdge() {
-    return (isOnLeftEdge() || isOnRightEdge());
-  }
-
-  bool isOnRightEdge() => this._coordinate.column == this._layout.columns - 1;
-
-  bool isOnLeftEdge() => this._coordinate.column == 0;
-
-  bool isEmpty() {
-    return _stone == null;
-  }
-
-  bool isTaken() {
-    return !isEmpty();
-  }
+  bool get present => !empty;
 
   bool wouldSuffocate(Stone stone) {
     return neighbouringGroups().where((g) => g.color == stone.color).any((g) {
@@ -258,7 +231,7 @@ class Group {
         .map((stone) => stone.intersection)
         .whereType<Intersection>()
         .expand((intersection) => intersection.neighbours)
-        .where((nInt) => nInt.isEmpty())
+        .where((nInt) => nInt.empty)
         .map((e) => e._coordinate)
         .toSet();
     return set;

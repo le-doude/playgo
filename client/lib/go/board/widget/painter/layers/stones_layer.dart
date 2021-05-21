@@ -13,7 +13,7 @@ class StonesLayer extends BoardLayer {
   final BoardTheme theme;
   final Board board;
 
-  StonesLayer(this.board, this.theme) : super(20);
+  StonesLayer(this.board, this.theme) : super(25);
 
   @override
   void draw(Canvas canvas, BoardCoordinatesManager coordMngr) {

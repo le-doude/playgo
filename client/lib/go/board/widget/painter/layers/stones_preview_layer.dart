@@ -11,7 +11,7 @@ class StonesPreviewLayer extends BoardLayer {
   final StonePreviewHolder holder;
   final BoardTheme theme;
 
-  StonesPreviewLayer(this.holder, this.theme) : super(25);
+  StonesPreviewLayer(this.holder, this.theme) : super(30);
 
   @override
   void draw(Canvas canvas, BoardCoordinatesManager coordMngr) {

@@ -5,6 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:play_go_client/go/board.dart';
 import 'package:play_go_client/go/board/stone_preview_holder.dart';
 import 'package:play_go_client/go/board/theme.dart';
+import 'package:play_go_client/go/board/widget/painter/layers/stones_shadows_layer.dart';
 
 import 'board_coordinates_manager.dart';
 import 'layers/board_layer.dart';
@@ -29,6 +30,7 @@ class StonesPainter extends CustomPainter {
     if (previewHolder != null) {
       this.layers.add(StonesPreviewLayer(previewHolder, theme));
     }
+    this.layers.add(StoneShadowsLayer(this.board, this.theme));
     this.layers.addAll(layeredComponents ?? []);
     this.layers.sort((l, r) => l.priority.compareTo(r.priority));
   }

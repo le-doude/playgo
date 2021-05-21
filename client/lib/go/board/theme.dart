@@ -79,9 +79,9 @@ class WhiteStoneDrawer extends StoneDrawer {
     ..style = PaintingStyle.fill
     ..isAntiAlias = false;
   final Paint strokeBlack = Paint()
-    ..color = Colors.black
+    ..color = Colors.blueGrey
     ..style = PaintingStyle.stroke
-    ..strokeWidth = 2
+    ..strokeWidth = 1.5
     ..isAntiAlias = true;
 
   WhiteStoneDrawer();
@@ -115,6 +115,26 @@ class BlackStoneDrawer extends StoneDrawer {
   }
 }
 
+class ShadowDrawer extends StoneDrawer {
+  final Paint shadows = Paint()
+    ..color = Colors.black.withOpacity(0.25)
+    ..blendMode = BlendMode.darken
+    ..filterQuality = FilterQuality.low
+    ..style = PaintingStyle.fill
+    ..isAntiAlias = true;
+
+  @override
+  void draw(Canvas canvas, BoardCoordinatesManager coordinatesManager,
+      BoardCoordinate coordinate,
+      {bool preview = false}) {
+    var offset = coordinatesManager.fromCoordinate(coordinate);
+    var radius = coordinatesManager.cellHeight * (preview ? 0.3 : 0.46);
+    var transX = coordinatesManager.cellWidth * 0.075;
+    var transY = coordinatesManager.cellHeight * 0.075;
+    canvas.drawCircle(offset.translate(transX, transY), radius, shadows);
+  }
+}
+
 class NoopDrawer extends StoneDrawer {
   @override
   void draw(Canvas canvas, BoardCoordinatesManager coordinatesManager,
@@ -123,6 +143,7 @@ class NoopDrawer extends StoneDrawer {
 }
 
 class StoneDrawers {
+  final StoneDrawer shadows = ShadowDrawer();
   final StoneDrawer white = WhiteStoneDrawer();
   final StoneDrawer black = BlackStoneDrawer();
   final StoneDrawer noop = NoopDrawer();
