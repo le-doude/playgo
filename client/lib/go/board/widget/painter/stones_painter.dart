@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:play_go_client/go/board.dart';
 import 'package:play_go_client/go/board/stone_preview_holder.dart';
-import 'package:play_go_client/go/board/theme.dart';
+import 'package:play_go_client/go/board/board_theme.dart';
 import 'package:play_go_client/go/board/widget/painter/layers/stones_shadows_layer.dart';
 
 import 'board_coordinates_manager.dart';

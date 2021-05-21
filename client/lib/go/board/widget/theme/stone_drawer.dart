@@ -22,10 +22,22 @@ class NoopDrawer extends StoneDrawer {
 }
 
 class GeometryStoneDrawer extends StoneDrawer {
-  final Paint? fill;
-  final Paint? stroke;
+  late final Paint? _fill;
+  late final Paint? _stroke;
 
-  GeometryStoneDrawer({this.fill, this.stroke});
+  GeometryStoneDrawer({Color? fill, Color? stroke}) {
+    this._fill = paint(fill, PaintingStyle.fill);
+    this._stroke = paint(stroke, PaintingStyle.stroke);
+  }
+
+  static Paint? paint(Color? color, PaintingStyle style) {
+    if (color == null) return null;
+    return Paint()
+      ..color = color
+      ..style = style
+      ..strokeWidth = 1
+      ..isAntiAlias = true;
+  }
 
   @override
   void draw(
@@ -35,21 +47,49 @@ class GeometryStoneDrawer extends StoneDrawer {
   ) {
     var center = coordinatesManager.fromCoordinate(coordinate);
     var radius = coordinatesManager.cellHeight * 0.465;
-    _drawCircleIfPaintNotNull(canvas, center, radius, fill);
-    _drawCircleIfPaintNotNull(canvas, center, radius, stroke);
+    _drawCircleIfPaintNotNull(canvas, center, radius, _fill);
+    _drawCircleIfPaintNotNull(canvas, center, radius, _stroke);
   }
 
   void _drawCircleIfPaintNotNull(
       Canvas canvas, Offset center, double radius, Paint? paint) {
     if (paint != null) {
-      canvas.drawCircle(center, radius, paint!);
+      canvas.drawCircle(center, radius, paint);
     }
   }
 }
 
-class StoneDrawers {}
+class StoneDrawers {
+  static final StoneDrawer white = GeometryStoneDrawer(
+      fill: GoStonesColors.WHITE, stroke: GoStonesColors.GREY);
+  static final StoneDrawer black =
+      GeometryStoneDrawer(fill: GoStonesColors.BLACK);
+  static final StoneDrawer shadowDrawer =
+      GeometryStoneDrawer(fill: GoStonesColors.BLACK.withOpacity(0.25));
+
+  static final StoneDrawer whitePreview = GeometryStoneDrawer(
+    fill: GoStonesColors.WHITE.withOpacity(0.8),
+  );
+  static final StoneDrawer blackPreview =
+      GeometryStoneDrawer(fill: GoStonesColors.BLACK.withOpacity(0.8));
+
+  static final StoneDrawer noop = NoopDrawer();
+
+  StoneDrawer forColor(String? color, {bool preview = false}) {
+    if (color == "white") {
+      return preview ? whitePreview : white;
+    }
+    if (color == "black") {
+      return preview ? blackPreview : black;
+    }
+    return noop;
+  }
+
+  StoneDrawer get shadows => StoneDrawers.shadowDrawer;
+}
 
 class GoStonesColors {
   static final Color BLACK = Color.fromARGB(255, 27, 27, 20);
   static final Color WHITE = Color.fromARGB(255, 252, 252, 242);
+  static final Color GREY = Colors.blueGrey;
 }

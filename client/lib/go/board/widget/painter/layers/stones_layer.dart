@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:play_go_client/go/board.dart';
-import 'package:play_go_client/go/board/theme.dart';
+import 'package:play_go_client/go/board/board_theme.dart';
 import 'package:play_go_client/go/board/widget/painter/board_coordinates_manager.dart';
 
 import 'board_layer.dart';
@@ -24,7 +24,7 @@ class StonesLayer extends BoardLayer {
   void renderIntersection(Canvas canvas, BoardCoordinatesManager coordMngr,
       Intersection intersection) {
     theme.stoneDrawers
-        .drawerForColor(intersection.stone?.color)
+        .forColor(intersection.stone?.color)
         .draw(canvas, coordMngr, intersection.coordinate);
   }
 }

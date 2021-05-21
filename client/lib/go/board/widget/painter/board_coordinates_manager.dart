@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:play_go_client/go/board/theme.dart';
+import 'package:play_go_client/go/board/board_theme.dart';
 
 import '../../layout.dart';
 

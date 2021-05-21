@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:play_go_client/go/board/layout.dart';
-import 'package:play_go_client/go/board/theme.dart';
+import 'package:play_go_client/go/board/board_theme.dart';
 
 import 'board_coordinates_manager.dart';
 import 'layers/board_layer.dart';

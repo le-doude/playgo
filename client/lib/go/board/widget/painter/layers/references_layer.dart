@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:play_go_client/go/board/layout.dart';
-import 'package:play_go_client/go/board/theme.dart';
+import 'package:play_go_client/go/board/board_theme.dart';
 
 import '../board_coordinates_manager.dart';
 import 'board_layer.dart';

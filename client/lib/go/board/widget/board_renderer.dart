@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:play_go_client/go/board.dart';
 import 'package:play_go_client/go/board/stone_preview_holder.dart';
-import 'package:play_go_client/go/board/theme.dart';
+import 'package:play_go_client/go/board/board_theme.dart';
 import 'package:play_go_client/go/board/widget/painter/board_coordinates_manager.dart';
 import 'package:play_go_client/go/board/widget/painter/board_painter.dart';
 import 'package:play_go_client/go/board/widget/painter/stones_painter.dart';

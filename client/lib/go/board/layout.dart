@@ -9,12 +9,12 @@ class Layout {
 
   Layout(this.columns, this.rows, this.startPoints);
 
-  List<List<Intersection>> generateTable(
-      Intersection Function(int column, int row) initIntersection) {
+  List<List<T>> generateTable<T>(
+      T Function(int column, int row) cellGen) {
     return List.generate(
         this.columns,
         (column) => List.generate(
-            this.rows, (row) => initIntersection.call(column, row)));
+            this.rows, (row) => cellGen.call(column, row)));
   }
 
   Set<BoardCoordinate> computeNeighbours(BoardCoordinate coordinate) {
@@ -73,9 +73,7 @@ class BoardCoordinate {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
       other is BoardCoordinate &&
-          runtimeType == other.runtimeType &&
           column == other.column &&
           row == other.row;
 
