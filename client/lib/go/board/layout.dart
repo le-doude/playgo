@@ -1,11 +1,37 @@
 import 'dart:math';
 
+import 'package:play_go_client/go/board.dart';
+
 class Layout {
   final int columns;
   final int rows;
   final List<BoardCoordinate> startPoints;
 
   Layout(this.columns, this.rows, this.startPoints);
+
+  List<List<T>> generateTable<T>(
+      T Function(int column, int row) cellGen) {
+    return List.generate(
+        this.columns,
+        (column) => List.generate(
+            this.rows, (row) => cellGen.call(column, row)));
+  }
+
+  Set<BoardCoordinate> computeNeighbours(BoardCoordinate coordinate) {
+    return [
+      coordinate.translate(0, 1),
+      coordinate.translate(1, 0),
+      coordinate.translate(-1, 0),
+      coordinate.translate(0, -1),
+    ].where((e) => this.includes(e)).toSet();
+  }
+
+  bool includes(BoardCoordinate coordinate) {
+    return 0 <= coordinate.column &&
+        coordinate.column < this.columns &&
+        0 <= coordinate.row &&
+        coordinate.row < this.rows;
+  }
 }
 
 class Layouts {
@@ -47,32 +73,14 @@ class BoardCoordinate {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
       other is BoardCoordinate &&
-          runtimeType == other.runtimeType &&
           column == other.column &&
           row == other.row;
 
   @override
   int get hashCode => column.hashCode ^ row.hashCode;
 
-  BoardCoordinate? up() {
-    return fromCurrent(0, -1);
-  }
-
-  BoardCoordinate? down() {
-    return fromCurrent(0, 1);
-  }
-
-  BoardCoordinate? left() {
-    return fromCurrent(-1, 0);
-  }
-
-  BoardCoordinate? right() {
-    return fromCurrent(1, 0);
-  }
-
-  BoardCoordinate? fromCurrent(int xIncr, int yIncr) {
+  BoardCoordinate translate(int xIncr, int yIncr) {
     var x = column + xIncr;
     var y = row + yIncr;
     return BoardCoordinate(x, y);

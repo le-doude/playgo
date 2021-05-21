@@ -1,16 +1,17 @@
 import 'dart:ui';
 
-import 'package:play_go_client/go/board/board_painter.dart';
 import 'package:play_go_client/go/board/layout.dart';
-import 'package:play_go_client/go/board/theme.dart';
+import 'package:play_go_client/go/board/board_theme.dart';
+import 'package:play_go_client/go/board/widget/painter/board_painter.dart';
 
-import 'board_coordinates_manager.dart';
+import '../board_coordinates_manager.dart';
+import 'board_layer.dart';
 
-class BoardGridDrawer extends BoardLayer{
+class GridDrawer extends BoardLayer{
   final Layout layout;
   final BoardTheme theme;
 
-  BoardGridDrawer(this.layout, this.theme) : super(0);
+  GridDrawer(this.layout, this.theme) : super(0);
 
   @override
   void draw(Canvas canvas, BoardCoordinatesManager coordMngr) {

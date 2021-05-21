@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:play_go_client/go/board/board_widget.dart';
+import 'package:play_go_client/go/board.dart';
 import 'package:play_go_client/go/board/layout.dart';
-import 'package:play_go_client/go/board/theme.dart';
+import 'package:play_go_client/go/board/stone_preview_holder.dart';
+import 'package:play_go_client/go/board/board_theme.dart';
+import 'package:play_go_client/go/board/widget/board_renderer.dart';
 
 void main() {
   runApp(PlayGoClientApp());
@@ -70,6 +72,18 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    var board = Board(Layouts.STANDARD_19_BY_19);
+    board.place(Stone(color: "white"), BoardCoordinate(3, 3));
+    board.place(Stone(color: "black"), BoardCoordinate(15, 15));
+    board.place(Stone(color: "white"), BoardCoordinate(18, 18));
+
+    var previewHolder =
+        StonePreviewHolder(StonePreview("white", BoardCoordinate(9, 9)));
+    var boardRenderer = BoardRenderer(
+        board: board,
+        theme: BoardThemes.DEFAUT,
+        previewHolder: previewHolder);
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -77,10 +91,7 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
         title: Text(widget.title),
       ),
       body: Container(
-          padding: EdgeInsets.all(10),
-          child: Center(
-              child:
-                  BoardWidget(Layouts.STANDARD_19_BY_19, BoardThemes.DEFAUT))),
+          padding: EdgeInsets.all(10), child: Center(child: boardRenderer)),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
