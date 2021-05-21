@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:play_go_client/go/board.dart';
+import 'package:play_go_client/go/board/board_widget.dart';
 import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/stone_preview_holder.dart';
 import 'package:play_go_client/go/board/board_theme.dart';
 import 'package:play_go_client/go/board/widget/board_renderer.dart';
+import 'package:play_go_client/go/game.dart';
+import 'package:play_go_client/go/players.dart';
+import 'package:play_go_client/go/rules.dart';
 
 void main() {
   runApp(PlayGoClientApp());
@@ -51,19 +55,6 @@ class PlayGoClientHomePage extends StatefulWidget {
 }
 
 class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -73,16 +64,23 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     var board = Board(Layouts.STANDARD_19_BY_19);
-    board.place(Stone(color: "white"), BoardCoordinate(3, 3));
-    board.place(Stone(color: "black"), BoardCoordinate(15, 15));
-    board.place(Stone(color: "white"), BoardCoordinate(18, 18));
-
-    var previewHolder =
-        StonePreviewHolder(StonePreview("white", BoardCoordinate(9, 9)));
-    var boardRenderer = BoardRenderer(
-        board: board,
-        theme: BoardThemes.DEFAUT,
-        previewHolder: previewHolder);
+    var game =
+        LocalGame(board, Rules(), Players([Player("black"), Player("white")]));
+    var previewHolder = StonePreviewHolder(null);
+    var boardWidget = BoardWidget(
+      board: board,
+      theme: BoardThemes.DEFAUT,
+      previewHolder: previewHolder,
+      onClick: (coord) => game.place(coord),
+      onHover: (coord) {
+        if (game.allowed(coord)) {
+          previewHolder.value = StonePreview(game.players.current.color, coord);
+        } else {
+          previewHolder.clear();
+        }
+      },
+      onMove: () => previewHolder.clear(),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -91,11 +89,11 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
         title: Text(widget.title),
       ),
       body: Container(
-          padding: EdgeInsets.all(10), child: Center(child: boardRenderer)),
+          padding: EdgeInsets.all(10), child: Center(child: boardWidget)),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+        onPressed: () => game.pass(),
+        tooltip: 'Pass',
+        child: Text('Pass'),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

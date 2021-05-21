@@ -4,19 +4,18 @@ import 'board.dart';
 
 typedef CurrentPlayerAction = void Function(Player player);
 
-abstract class Players {
-  void withCurrentPlayer(CurrentPlayerAction action) {
-    peekCurrentPlayer(action);
-    _updateNextPlayer();
+class Players {
+  final List<Player> playerInOrder;
+  int _turnCount;
+
+  Players(this.playerInOrder, {int startAtTurn = 0}) : _turnCount = startAtTurn;
+
+  Player get current =>
+      this.playerInOrder[_turnCount % this.playerInOrder.length];
+
+  void nextTurn() {
+    _turnCount++;
   }
-
-  void peekCurrentPlayer(CurrentPlayerAction action) {
-    action.call(_currentPlayer());
-  }
-
-  Player _currentPlayer();
-
-  void _updateNextPlayer() {}
 }
 
 class Player {
