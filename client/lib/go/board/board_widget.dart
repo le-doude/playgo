@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/src/gestures/events.dart';
 import 'package:play_go_client/go/board.dart';
 import 'package:play_go_client/go/board/board_theme.dart';
 import 'package:play_go_client/go/board/layout.dart';
@@ -33,27 +34,23 @@ class BoardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Listener(
       onPointerHover: (event) {
-        if (onHover != null) {
-          var cMngr = this._boardRenderer.coordinateManager;
-          if (cMngr.isInFrame(event.localPosition)) {
-            onHover!(cMngr.from(event.localPosition));
-          }
-        }
+        convert(event, this.onHover);
       },
       onPointerUp: (event) {
-        if (onClick != null) {
-          var cMngr = this._boardRenderer.coordinateManager;
-          if (cMngr.isInFrame(event.localPosition)) {
-            onClick!(cMngr.from(event.localPosition));
-          }
-        }
+        convert(event, this.onClick);
       },
       onPointerMove: (event) {
-        if (onMove != null) {
-          onMove!();
-        }
+        if (onMove != null) onMove!();
       },
       child: this._boardRenderer,
     );
+  }
+
+  void convert(PointerEvent event, BoardEventCallback? callback) {
+    if (callback == null) return;
+    var mngr = this._boardRenderer.coordinateManager;
+    if (mngr.isInFrame(event.localPosition)) {
+      callback(mngr.from(event.localPosition));
+    }
   }
 }
