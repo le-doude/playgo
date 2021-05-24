@@ -8,7 +8,7 @@ abstract class StoneDrawer {
   void draw(
     Canvas canvas,
     BoardCoordinatesManager coordinatesManager,
-    BoardCoordinate coordinate,
+    Position coordinate,
   );
 }
 
@@ -17,7 +17,7 @@ class NoopDrawer extends StoneDrawer {
   void draw(
     Canvas canvas,
     BoardCoordinatesManager coordinatesManager,
-    BoardCoordinate coordinate,
+    Position coordinate,
   ) {}
 }
 
@@ -43,7 +43,7 @@ class GeometryStoneDrawer extends StoneDrawer {
   void draw(
     Canvas canvas,
     BoardCoordinatesManager coordinatesManager,
-    BoardCoordinate coordinate,
+    Position coordinate,
   ) {
     var center = coordinatesManager.fromCoordinate(coordinate);
     var radius = coordinatesManager.cellHeight * 0.465;

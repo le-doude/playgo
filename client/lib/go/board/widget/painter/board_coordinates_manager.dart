@@ -50,7 +50,7 @@ class BoardCoordinatesManager {
         gridFrame.top + j * this.cellHeight);
   }
 
-  Offset fromCoordinate(BoardCoordinate coord) {
+  Offset fromCoordinate(Position coord) {
     return get(coord.column, coord.row);
   }
 
@@ -66,11 +66,11 @@ class BoardCoordinatesManager {
     return innerFrame.contains(coord);
   }
 
-  BoardCoordinate from(Offset eventCoord) {
+  Position from(Offset eventCoord) {
     if (!isInFrame(eventCoord)) {
       throw OutOfBoardOffsetError();
     }
-    return BoardCoordinate((eventCoord.dx - this.innerFrame.left) ~/ cellWidth,
+    return Position((eventCoord.dx - this.innerFrame.left) ~/ cellWidth,
         (eventCoord.dy - this.innerFrame.top) ~/ cellHeight);
   }
 

@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
-import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 
 import 'board/layout.dart';
 
-typedef bool KoPredicate(Board board, Stone stone, BoardCoordinate coordinate);
+typedef bool KoPredicate(Board board, Stone stone, Position coordinate);
 typedef void CaptureCallback(Stone stone);
-typedef void MoveCallback(Stone stone, BoardCoordinate coordinate);
+typedef void MoveCallback(Stone stone, Position coordinate);
 
 class Board extends ChangeNotifier {
   final Layout layout;
@@ -20,7 +19,7 @@ class Board extends ChangeNotifier {
 
   Board(this.layout) {
     this._intersections = this.layout.generateTable((int column, int row) =>
-        Intersection(this, this.layout, BoardCoordinate(column, row)));
+        Intersection(this, this.layout, Position(column, row)));
     this._intersections.forEach((element) {
       element.forEach((intersection) {
         intersection._linkNeighbours();
@@ -28,12 +27,22 @@ class Board extends ChangeNotifier {
     });
   }
 
-  Intersection at(BoardCoordinate coordinate) {
+  Intersection at(Position coordinate) {
     return _intersections[coordinate.column][coordinate.row];
   }
 
-  void place(Stone stone, BoardCoordinate coordinate) {
+  void place(Stone stone, Position coordinate) {
     at(coordinate).place(stone);
+    notifyListeners();
+  }
+
+  void remove(Position coord) {
+    at(coord).removeStone();
+    notifyListeners();
+  }
+
+  void removeAll(List<Position> coordinates) {
+    coordinates.map((e) => at(e)).forEach((i) => i.removeStone());
     notifyListeners();
   }
 
@@ -66,13 +75,20 @@ class Board extends ChangeNotifier {
 class Intersection {
   final Board _board;
   final Layout _layout;
-  final BoardCoordinate _coordinate;
+  final Position _coordinate;
   late final Set<Intersection> _neighbours;
   Stone? _stone;
 
+  @override
+  bool operator ==(Object other) =>
+      other is Intersection && _coordinate == other._coordinate;
+
+  @override
+  int get hashCode => _coordinate.hashCode;
+
   Stone? get stone => _stone;
 
-  BoardCoordinate get coordinate => _coordinate;
+  Position get coordinate => _coordinate;
 
   Set<Intersection> get neighbours => _neighbours;
 
@@ -91,15 +107,16 @@ class Intersection {
 
   void place(Stone stone) {
     this._stone = stone;
+    this._stone!.intersection = this;
     _updateGroups();
   }
 
   Stone removeStone({bool process = true}) {
     var old = this._stone!;
     this._stone = null;
-    old.intersection = null;
+    // old.intersection = null;
     if (process) {
-      Set<Stone> oldGroup = old.group.stones;
+      Set<Stone> oldGroup = Set.from(old.group.stones);
       oldGroup.remove(old);
       _remakeGroup(oldGroup);
     }
@@ -110,8 +127,8 @@ class Intersection {
     _neighbours.forEach((neighbour) {
       if (this.present &&
           neighbour.present &&
-          this._stone!.color != neighbour._stone?.color) {
-        this._stone!.link(neighbour._stone!);
+          this._stone!.color == neighbour._stone?.color) {
+        this._stone!._link(neighbour._stone!);
       }
     });
   }
@@ -121,13 +138,22 @@ class Intersection {
   bool get present => !empty;
 
   bool wouldSuffocate(Stone stone) {
-    return neighbouringGroups().where((g) => g.color == stone.color).any((g) {
+    // check if ALL neighbour have a stone of different color
+    var selfSuffocation =
+        !neighbours.any((i) => i.empty || stone.color == i.stone?.color);
+    // check if we are taking the last liberty of all the neighbouring group
+    // of the same color
+    var neighbourSuffocation =
+        neighbouringGroups().where((g) => g.color == stone.color).any((g) {
       var f = g.freedoms();
       return f.length > 1 && f.any((c) => c != this._coordinate);
     });
+    return selfSuffocation || neighbourSuffocation;
   }
 
   bool wouldCapture(Stone stone) {
+    // check if any neighbour of different color has its last liberty
+    // in this specific coordinates
     return neighbouringGroups().where((g) => g.color != stone.color).any((g) {
       var f = g.freedoms();
       return f.length == 1 && f.first == this._coordinate;
@@ -144,7 +170,7 @@ class Intersection {
 
   void _remakeGroup(Iterable<Stone> oldGroupStones) {
     oldGroupStones.forEach((stone) {
-      stone.resetGroup();
+      stone._resetGroup();
     });
     oldGroupStones.forEach((stone) {
       if (stone.intersection != null) {
@@ -158,7 +184,7 @@ class Stone {
   static final Uuid uuids = Uuid();
   final UuidValue id;
   final String color;
-  Intersection? intersection;
+  Intersection? intersection; // stone cant be moved to another intersection
   late Group group;
 
   Stone({UuidValue? id, required String color})
@@ -175,11 +201,11 @@ class Stone {
   @override
   int get hashCode => id.hashCode;
 
-  void link(Stone stone) {
+  void _link(Stone stone) {
     this.group.merge(stone.group);
   }
 
-  void resetGroup() {
+  void _resetGroup() {
     this.group = Group(stones: [this]);
   }
 }
@@ -193,7 +219,9 @@ class Group {
 
   Group({UuidValue? id, required Iterable<Stone> stones})
       : _id = id ?? uuids.v4obj(),
-        _stones = Set.unmodifiable(stones);
+        _stones = Set.unmodifiable(stones) {
+    // can process freedoms ahead since Group is immutable
+  }
 
   UuidValue get id => _id;
 
@@ -225,8 +253,8 @@ class Group {
     return freedoms().length;
   }
 
-  Set<BoardCoordinate> freedoms() {
-    var set = this
+  Set<Position> freedoms() {
+    return this
         .stones
         .map((stone) => stone.intersection)
         .whereType<Intersection>()
@@ -234,6 +262,5 @@ class Group {
         .where((nInt) => nInt.empty)
         .map((e) => e._coordinate)
         .toSet();
-    return set;
   }
 }

@@ -11,7 +11,7 @@ class StonePreviewHolder extends ValueNotifier<StonePreview?> {
 
 class StonePreview {
   final String color;
-  final BoardCoordinate coordinate;
+  final Position coordinate;
 
   StonePreview(this.color, this.coordinate);
 

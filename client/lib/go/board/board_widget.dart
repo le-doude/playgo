@@ -6,7 +6,7 @@ import 'package:play_go_client/go/board/stone_preview_holder.dart';
 import 'package:play_go_client/go/board/widget/board_renderer.dart';
 import 'package:play_go_client/go/board/widget/painter/board_coordinates_manager.dart';
 
-typedef BoardEventCallback = void Function(BoardCoordinate coordinate);
+typedef BoardEventCallback = void Function(Position coordinate);
 typedef EventCallback = void Function();
 
 class BoardWidget extends StatelessWidget {
