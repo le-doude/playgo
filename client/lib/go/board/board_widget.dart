@@ -18,15 +18,19 @@ class BoardWidget extends StatelessWidget {
 
   BoardWidget(
       {Key? key,
-      required Board board,
+      required BoardState board,
       required BoardTheme theme,
+      required Layout layout,
       StonePreviewHolder? previewHolder,
       this.onClick,
       this.onHover,
       this.onMove})
       : super(key: key) {
-    this._boardRenderer =
-        BoardRenderer(board: board, theme: theme, previewHolder: previewHolder);
+    this._boardRenderer = BoardRenderer(
+        board: board,
+        theme: theme,
+        layout: layout,
+        previewHolder: previewHolder);
   }
 
   @override

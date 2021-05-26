@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:play_go_client/go/board.dart';
+import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/stone_preview_holder.dart';
 import 'package:play_go_client/go/board/board_theme.dart';
 import 'package:play_go_client/go/board/widget/painter/board_coordinates_manager.dart';
@@ -16,13 +17,14 @@ class BoardRenderer extends StatelessWidget {
 
   BoardRenderer(
       {Key? key,
-      required Board board,
+      required BoardState board,
       required this.theme,
+      required Layout layout,
       StonePreviewHolder? previewHolder})
       : super(key: key) {
-    this._boardPainter = BoardPainter(board.layout, this.theme);
+    this._boardPainter = BoardPainter(layout, this.theme);
     this._stonesPainter =
-        StonesPainter(board, this.theme, previewHolder: previewHolder);
+        StonesPainter(board, this.theme, layout, previewHolder: previewHolder);
   }
 
   @override

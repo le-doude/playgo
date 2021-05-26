@@ -6,7 +6,7 @@ import 'package:play_go_client/go/board/widget/painter/board_coordinates_manager
 import 'package:play_go_client/go/board/widget/painter/layers/board_layer.dart';
 
 class StoneShadowsLayer extends BoardLayer {
-  final Board _board;
+  final BoardState _board;
   final BoardTheme _theme;
 
   StoneShadowsLayer(this._board, this._theme) : super(24);

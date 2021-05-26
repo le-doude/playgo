@@ -70,6 +70,7 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
     var boardWidget = BoardWidget(
       board: board,
       theme: Themes.base,
+      layout: board.layout,
       previewHolder: previewHolder,
       onClick: (coord) => game.place(coord),
       onHover: (coord) {

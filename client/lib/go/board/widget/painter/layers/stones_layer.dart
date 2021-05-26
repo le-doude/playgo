@@ -11,7 +11,7 @@ import 'board_layer.dart';
 class StonesLayer extends BoardLayer {
   static final Logger logger = Logger();
   final BoardTheme theme;
-  final Board board;
+  final BoardState board;
 
   StonesLayer(this.board, this.theme) : super(25);
 

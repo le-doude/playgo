@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:play_go_client/go/board.dart';
+import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/stone_preview_holder.dart';
 import 'package:play_go_client/go/board/board_theme.dart';
 import 'package:play_go_client/go/board/widget/painter/layers/stones_shadows_layer.dart';
@@ -14,16 +15,17 @@ import 'layers/stones_preview_layer.dart';
 
 class StonesPainter extends CustomPainter {
   static final Logger logger = Logger();
-  final Board board;
+  final BoardState board;
   late final StonePreviewHolder? previewHolder;
   final BoardTheme theme;
+  final Layout layout;
   final List<BoardLayer> layers = List.empty(growable: true);
 
   BoardCoordinatesManager? _coordinatesManager;
 
   BoardCoordinatesManager get coordinatesManager => _coordinatesManager!;
 
-  StonesPainter(this.board, this.theme,
+  StonesPainter(this.board, this.theme, this.layout,
       {List<BoardLayer>? layeredComponents, StonePreviewHolder? previewHolder})
       : super(repaint: Listenable.merge([board, previewHolder])) {
     this.layers.add(StonesLayer(this.board, theme));
@@ -38,7 +40,7 @@ class StonesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     this._coordinatesManager =
-        BoardCoordinatesManager.compute(this.board.layout, theme, size);
+        BoardCoordinatesManager.compute(this.layout, theme, size);
     this.layers.forEach((component) {
       component.draw(canvas, this._coordinatesManager!);
     });
