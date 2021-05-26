@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/widget/painter/board_coordinates_manager.dart';
+import 'package:play_go_client/go/board/widget/theme/go_colors.dart';
 
 abstract class StoneDrawer {
   void draw(
@@ -61,17 +62,17 @@ class GeometryStoneDrawer extends StoneDrawer {
 
 class StoneDrawers {
   static final StoneDrawer white = GeometryStoneDrawer(
-      fill: GoStonesColors.WHITE, stroke: GoStonesColors.GREY);
+      fill: GoColors.WHITE, stroke: GoColors.GREY);
   static final StoneDrawer black =
-      GeometryStoneDrawer(fill: GoStonesColors.BLACK);
+      GeometryStoneDrawer(fill: GoColors.BLACK);
   static final StoneDrawer shadowDrawer =
-      GeometryStoneDrawer(fill: GoStonesColors.BLACK.withOpacity(0.25));
+      GeometryStoneDrawer(fill: GoColors.BLACK.withOpacity(0.25));
 
   static final StoneDrawer whitePreview = GeometryStoneDrawer(
-    fill: GoStonesColors.WHITE.withOpacity(0.8),
+    fill: GoColors.WHITE.withOpacity(0.8),
   );
   static final StoneDrawer blackPreview =
-      GeometryStoneDrawer(fill: GoStonesColors.BLACK.withOpacity(0.8));
+      GeometryStoneDrawer(fill: GoColors.BLACK.withOpacity(0.8));
 
   static final StoneDrawer noop = NoopDrawer();
 
@@ -88,8 +89,4 @@ class StoneDrawers {
   StoneDrawer get shadows => StoneDrawers.shadowDrawer;
 }
 
-class GoStonesColors {
-  static final Color BLACK = Color.fromARGB(255, 27, 27, 20);
-  static final Color WHITE = Color.fromARGB(255, 252, 252, 242);
-  static final Color GREY = Colors.blueGrey;
-}
+

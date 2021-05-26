@@ -37,7 +37,7 @@ class BoardCoordinatesManager {
     var frameSize = min(size.height, size.width);
     var frameRect =
     Rect.fromCenter(center: center, width: frameSize, height: frameSize);
-    var gridSize = frameSize * (theme.drawReferences ? 0.9 : 1.0);
+    var gridSize = frameSize * (theme.boardReferenceSettings.enabled ? 0.9 : 1.0);
     var gridRect =
     Rect.fromCenter(center: center, width: gridSize, height: gridSize);
     BoardCoordinatesManager coord = BoardCoordinatesManager(

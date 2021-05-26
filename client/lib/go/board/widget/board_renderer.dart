@@ -28,18 +28,15 @@ class BoardRenderer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-        aspectRatio: this.theme.aspectRatio,
+        aspectRatio: this.theme.boardAspectRatio,
         child: Stack(
           alignment: AlignmentDirectional.center,
           children: [
-            this.theme.background(),
+            (this.theme.backgroundSettings.background()),
             CustomPaint(
-              child: Container(),
-              painter: this._boardPainter,
-              foregroundPainter: this._stonesPainter,
-              isComplex: true,
-              willChange: true,
-            ),
+                child: Container(),
+                painter: this._boardPainter,
+                foregroundPainter: this._stonesPainter)
           ],
         ));
   }

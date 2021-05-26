@@ -16,7 +16,7 @@ class ReferencesLayer extends BoardLayer{
   ReferencesLayer(this.layout, this.theme) : super(2);
 
   void draw(Canvas canvas, BoardCoordinatesManager intersections) {
-    if(!this.theme.drawReferences) {
+    if(!this.theme.boardReferenceSettings.enabled) {
       return;
     }
     var top = intersections.outerFrame.top +
@@ -29,13 +29,13 @@ class ReferencesLayer extends BoardLayer{
     for (int i = 0; i < this.layout.columns; i++) {
       var offset = intersections.get(i, 0);
       var pOffset = Offset(offset.dx, top);
-      _drawText(canvas, this.theme.verticalReferencesType().toText(i + 1),
+      _drawText(canvas, this.theme.boardReferenceSettings.horizontal(i + 1),
           pOffset, intersections.cellHeight);
     }
     for (int i = 0; i < this.layout.rows; i++) {
       var offset = intersections.get(0, i);
       var pOffset = Offset(left, offset.dy);
-      _drawText(canvas, this.theme.horizontalReferencesType().toText(i + 1),
+      _drawText(canvas, this.theme.boardReferenceSettings.vertical(i + 1),
           pOffset, intersections.cellHeight);
     }
   }
@@ -44,7 +44,7 @@ class ReferencesLayer extends BoardLayer{
       Canvas canvas, String reference, Offset textCenter, double cellSize) {
     var painter = TextPainter(
         text: TextSpan(
-            text: reference, style: this.theme.boardRefernceStyle(cellSize)),
+            text: reference, style: this.theme.boardReferenceSettings.textStyle(cellSize)),
         maxLines: 1,
         textDirection: TextDirection.ltr,
     );

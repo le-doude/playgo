@@ -1,72 +1,38 @@
-import 'dart:ui';
+import 'package:play_go_client/go/board/widget/theme/board_reference_settings.dart';
+import 'package:play_go_client/go/board/widget/theme/grid_settings.dart';
 
-import 'package:flutter/material.dart';
-
+import 'widget/theme/background_settings.dart';
 import 'widget/theme/stone_drawer.dart';
 
-class BoardTheme {
-  static const Color BLACK_ISH = Color.fromARGB(255, 30, 30, 15);
+class BaseBoardTheme extends BoardTheme{
+  final GridSettings gridSettings;
+  final StoneDrawers stoneDrawers;
+  final BoardReferenceSettings boardReferenceSettings;
+  final BackgroundSettings backgroundSettings;
+  final double boardAspectRatio;
 
-  final BoardRefType refType = BoardRefType();
-  final Paint inkLinesStyle = Paint()
-    ..style = PaintingStyle.fill
-    ..color = BLACK_ISH
-    ..strokeWidth = 1
-    ..strokeCap = StrokeCap.square
-    ..isAntiAlias = true;
-  final StoneDrawers stoneDrawers = StoneDrawers();
-
-  double get aspectRatio => 42/43;
-
-  bool get drawReferences => true;
-
-  Paint inkLinesPaint() {
-    return this.inkLinesStyle;
-  }
-
-  double startPointSize(double cellSize) {
-    return  cellSize * 0.09;
-  }
-
-  BoardRefType horizontalReferencesType() {
-    return this.refType;
-  }
-
-  BoardRefType verticalReferencesType() {
-    return this.refType;
-  }
-
-  String boardReferenceFont() {
-    return "Futura";
-  }
-
-  TextStyle boardRefernceStyle(double intersectionSize) {
-    return TextStyle(
-        color: BLACK_ISH,
-        fontSize: intersectionSize / 2,
-        fontFamily: "Futura");
-  }
-
-  Widget background() {
-    return Image(
-        image: AssetImage("assets/textures/shinkaya2.jpg"),
-        alignment: Alignment.center,
-        height: double.infinity,
-        width: double.infinity,
-        fit: BoxFit.contain);
-  }
-
-  StoneDrawers stones() {
-    return stoneDrawers;
-  }
+  BaseBoardTheme(
+      {GridSettings? gridSettings,
+      StoneDrawers? stoneDrawers,
+      BoardReferenceSettings? boardReferenceSettings,
+      BackgroundSettings? backgroundSettings,
+      double? boardAspectRatio})
+      : gridSettings = gridSettings ?? BaseGridSettings(),
+        stoneDrawers = stoneDrawers ?? StoneDrawers(),
+        boardReferenceSettings =
+            boardReferenceSettings ?? BaseBoardReferenceSettings(),
+        backgroundSettings = backgroundSettings ?? BaseBackgroundSettings(),
+        boardAspectRatio = boardAspectRatio ?? 42 / 43;
 }
 
-class BoardRefType {
-  String toText(int position) {
-    return position.toString();
-  }
+abstract class BoardTheme {
+  GridSettings get gridSettings;
+  StoneDrawers get stoneDrawers;
+  BoardReferenceSettings get boardReferenceSettings;
+  BackgroundSettings get backgroundSettings;
+  double get boardAspectRatio;
 }
 
-class BoardThemes {
-  static final BoardTheme DEFAUT = BoardTheme();
+class Themes {
+  static final BoardTheme base = BaseBoardTheme();
 }

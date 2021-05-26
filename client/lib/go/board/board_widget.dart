@@ -5,7 +5,6 @@ import 'package:play_go_client/go/board/board_theme.dart';
 import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/stone_preview_holder.dart';
 import 'package:play_go_client/go/board/widget/board_renderer.dart';
-import 'package:play_go_client/go/board/widget/painter/board_coordinates_manager.dart';
 
 typedef BoardEventCallback = void Function(Position coordinate);
 typedef EventCallback = void Function();
@@ -33,20 +32,14 @@ class BoardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Listener(
-      onPointerHover: (event) {
-        convert(event, this.onHover);
-      },
-      onPointerUp: (event) {
-        convert(event, this.onClick);
-      },
-      onPointerMove: (event) {
-        if (onMove != null) onMove!();
-      },
+      onPointerHover: (event) => pointerToPosition(event, this.onHover),
+      onPointerUp: (event) => pointerToPosition(event, this.onClick),
+      onPointerMove: (event) => this.onMove?.call(),
       child: this._boardRenderer,
     );
   }
 
-  void convert(PointerEvent event, BoardEventCallback? callback) {
+  void pointerToPosition(PointerEvent event, BoardEventCallback? callback) {
     if (callback == null) return;
     var mngr = this._boardRenderer.coordinateManager;
     if (mngr.isInFrame(event.localPosition)) {
