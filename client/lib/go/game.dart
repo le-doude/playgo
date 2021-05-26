@@ -1,8 +1,8 @@
 import 'package:play_go_client/go/board/layout.dart';
 
+import 'board.dart';
 import 'players.dart';
 import 'rules.dart';
-import 'board.dart';
 
 abstract class Game {
   final Board _board;

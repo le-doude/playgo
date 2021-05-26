@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:play_go_client/go/board.dart';
+import 'package:play_go_client/go/board/board_theme.dart';
 import 'package:play_go_client/go/board/board_widget.dart';
 import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/stone_preview_holder.dart';
-import 'package:play_go_client/go/board/board_theme.dart';
-import 'package:play_go_client/go/board/widget/board_renderer.dart';
 import 'package:play_go_client/go/game.dart';
 import 'package:play_go_client/go/players.dart';
 import 'package:play_go_client/go/rules.dart';

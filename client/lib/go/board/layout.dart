@@ -1,6 +1,4 @@
-import 'dart:math';
 
-import 'package:play_go_client/go/board.dart';
 
 class Layout {
   final int columns;

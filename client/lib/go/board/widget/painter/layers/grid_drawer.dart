@@ -1,8 +1,7 @@
 import 'dart:ui';
 
-import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/board_theme.dart';
-import 'package:play_go_client/go/board/widget/painter/board_painter.dart';
+import 'package:play_go_client/go/board/layout.dart';
 
 import '../board_coordinates_manager.dart';
 import 'board_layer.dart';
