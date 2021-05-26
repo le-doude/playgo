@@ -7,7 +7,7 @@ typedef bool KoPredicate(Board board, Stone stone, Position coordinate);
 typedef void CaptureCallback(Stone stone);
 typedef void MoveCallback(Stone stone, Position coordinate);
 
-abstract class RenderableBoard extends ChangeNotifier {
+abstract class BoardState extends ChangeNotifier {
   List<StonePosition> get state;
 }
 
@@ -28,7 +28,7 @@ class StonePosition {
   int get hashCode => color.hashCode ^ position.hashCode;
 }
 
-class Board extends RenderableBoard {
+class Board extends BoardState {
   final Layout layout;
   late final List<List<Intersection>> _intersections;
 
