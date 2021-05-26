@@ -12,7 +12,7 @@ class BoardRenderer extends StatelessWidget {
   late final BoardPainter _boardPainter;
   late final StonesPainter _stonesPainter;
 
-  BoardCoordinatesManager get coordinateManager =>
+  BoardCoordinates get coordinateManager =>
       _stonesPainter.coordinatesManager;
 
   BoardRenderer(

@@ -8,7 +8,7 @@ import 'package:play_go_client/go/board/widget/theme/go_colors.dart';
 abstract class StoneDrawer {
   void draw(
     Canvas canvas,
-    BoardCoordinatesManager coordinatesManager,
+    BoardCoordinates coordinatesManager,
     Position coordinate,
   );
 }
@@ -17,7 +17,7 @@ class NoopDrawer extends StoneDrawer {
   @override
   void draw(
     Canvas canvas,
-    BoardCoordinatesManager coordinatesManager,
+    BoardCoordinates coordinatesManager,
     Position coordinate,
   ) {}
 }
@@ -43,7 +43,7 @@ class GeometryStoneDrawer extends StoneDrawer {
   @override
   void draw(
     Canvas canvas,
-    BoardCoordinatesManager coordinatesManager,
+    BoardCoordinates coordinatesManager,
     Position coordinate,
   ) {
     var center = coordinatesManager.fromCoordinate(coordinate);

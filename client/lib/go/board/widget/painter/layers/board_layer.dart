@@ -6,5 +6,5 @@ abstract class BoardLayer {
 
   BoardLayer(this.priority);
 
-  void draw(Canvas canvas, BoardCoordinatesManager coordMngr);
+  void draw(Canvas canvas, BoardCoordinates coordMngr);
 }

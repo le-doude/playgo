@@ -15,7 +15,7 @@ class ReferencesLayer extends BoardLayer{
 
   ReferencesLayer(this.layout, this.theme) : super(2);
 
-  void draw(Canvas canvas, BoardCoordinatesManager intersections) {
+  void draw(Canvas canvas, BoardCoordinates intersections) {
     if(!this.theme.boardReferenceSettings.enabled) {
       return;
     }

@@ -13,7 +13,7 @@ class GridDrawer extends BoardLayer{
   GridDrawer(this.layout, this.theme) : super(0);
 
   @override
-  void draw(Canvas canvas, BoardCoordinatesManager coordMngr) {
+  void draw(Canvas canvas, BoardCoordinates coordMngr) {
     var paint = this.theme.gridSettings.inkPaint();
     coordMngr.columnEdgeVertices().forEach((column) {
       canvas.drawLine(column.first, column.last, paint);

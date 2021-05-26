@@ -12,7 +12,7 @@ class StarPointsDrawer extends BoardLayer{
 
   StarPointsDrawer(this.layout, this.theme) : super(1);
 
-  void draw(Canvas canvas, BoardCoordinatesManager intersections) {
+  void draw(Canvas canvas, BoardCoordinates intersections) {
     var paint = this.theme.gridSettings.inkPaint();
     var radius = this.theme.gridSettings.starPointSize(intersections.cellHeight);
     this.layout.startPoints.forEach((point) {

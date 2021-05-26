@@ -16,12 +16,12 @@ class StonesLayer extends BoardLayer {
   StonesLayer(this.board, this.theme) : super(25);
 
   @override
-  void draw(Canvas canvas, BoardCoordinatesManager coordMngr) {
+  void draw(Canvas canvas, BoardCoordinates coordMngr) {
     this.board.state.forEach(
         (s) => renderIntersection(canvas, coordMngr, s));
   }
 
-  void renderIntersection(Canvas canvas, BoardCoordinatesManager coordMngr,
+  void renderIntersection(Canvas canvas, BoardCoordinates coordMngr,
       StonePosition sp) {
     theme.stoneDrawers
         .forColor(sp.color)

@@ -21,9 +21,9 @@ class StonesPainter extends CustomPainter {
   final Layout layout;
   final List<BoardLayer> layers = List.empty(growable: true);
 
-  BoardCoordinatesManager? _coordinatesManager;
+  BoardCoordinates? _coordinatesManager;
 
-  BoardCoordinatesManager get coordinatesManager => _coordinatesManager!;
+  BoardCoordinates get coordinatesManager => _coordinatesManager!;
 
   StonesPainter(this.board, this.theme, this.layout,
       {List<BoardLayer>? layeredComponents, StonePreviewHolder? previewHolder})
@@ -40,7 +40,7 @@ class StonesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     this._coordinatesManager =
-        BoardCoordinatesManager.compute(this.layout, theme, size);
+        BoardCoordinates.compute(this.layout, theme, size);
     this.layers.forEach((component) {
       component.draw(canvas, this._coordinatesManager!);
     });

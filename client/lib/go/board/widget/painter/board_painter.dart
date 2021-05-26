@@ -15,8 +15,8 @@ class BoardPainter extends CustomPainter {
   final BoardTheme theme;
   final List<BoardLayer> layers = List.empty(growable: true);
 
-  BoardCoordinatesManager? _coordinatesManager;
-  BoardCoordinatesManager get coordinatesManager => _coordinatesManager!;
+  BoardCoordinates? _coordinatesManager;
+  BoardCoordinates get coordinatesManager => _coordinatesManager!;
 
   BoardPainter(this.layout, this.theme, {List<BoardLayer>? extraComponents}) {
     this.layers.add(GridDrawer(this.layout, theme));
@@ -29,7 +29,7 @@ class BoardPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     this._coordinatesManager =
-        BoardCoordinatesManager.compute(layout, theme, size);
+        BoardCoordinates.compute(layout, theme, size);
     this.layers.forEach((component) {
       component.draw(canvas, this._coordinatesManager!);
     });
