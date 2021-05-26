@@ -8,6 +8,8 @@ import 'package:play_go_client/go/game.dart';
 import 'package:play_go_client/go/players.dart';
 import 'package:play_go_client/go/rules.dart';
 
+import 'go/game/local_game.dart';
+
 void main() {
   runApp(PlayGoClientApp());
 }
@@ -71,9 +73,9 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
       theme: Themes.base,
       layout: board.layout,
       previewHolder: previewHolder,
-      onClick: (coord) => game.place(coord),
+      onClick: (coord) => game.place(game.players.current, coord),
       onHover: (coord) {
-        if (game.allowed(coord)) {
+        if (game.allowed(game.players.current, coord)) {
           previewHolder.value = StonePreview(game.players.current.color, coord);
         } else {
           previewHolder.clear();
@@ -91,7 +93,7 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
       body: Container(
           padding: EdgeInsets.all(10), child: Center(child: boardWidget)),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => game.pass(),
+        onPressed: () => game.pass(game.players.current),
         tooltip: 'Pass',
         child: Text('Pass'),
       ), // This trailing comma makes auto-formatting nicer for build methods.

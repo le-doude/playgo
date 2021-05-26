@@ -7,7 +7,9 @@ class Rules {
     return false;
   }
 
-  void updateState(Board board) {}
+  bool hasRepetition(Board board) {
+    return false;
+  }
 
-  void pass(Player current) {}
+  void updateState(Board board) {}
 }

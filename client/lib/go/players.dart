@@ -22,15 +22,12 @@ class Player {
   static final Uuid uuids = Uuid();
   final UuidValue _id;
   final String color;
-  final Set<Stone> _captures = Set();
 
   Player(this.color) : this._id = uuids.v4obj();
 
   Stone get stone => Stone(color: color);
 
   UuidValue get id => _id;
-
-  Set<Stone> get captures => _captures;
 
   @override
   bool operator ==(Object other) =>

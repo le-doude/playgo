@@ -1,4 +1,5 @@
 import 'package:play_go_client/go/board/layout.dart';
+import 'package:play_go_client/go/game/event_handler.dart';
 
 import 'board.dart';
 import 'players.dart';
@@ -8,8 +9,15 @@ abstract class Game {
   final Board _board;
   final Rules _rules;
   final Players _players;
+  final GameEventHandlers _eventHandlers = GameEventHandlers();
+  late final Map<Player, Set<Stone>> _captures;
 
-  Game(this._board, this._rules, this._players);
+  Game(this._board, this._rules, this._players) {
+    this._captures = Map.fromIterable(this._players.playerInOrder,
+        key: (p) => p, value: (p) => Set());
+  }
+
+  Map<Player, Set<Stone>> get captures => _captures;
 
   Board get board => _board;
 
@@ -17,39 +25,23 @@ abstract class Game {
 
   Players get players => _players;
 
-  void place(Position coordinate);
+  void resign(Player player); // can resign out of turn
 
-  void pass();
+  void place(Player player, Position coordinate);
 
-  bool allowed(Position coordinate);
+  void pass(Player player);
+
+  void nullify();
+
+  void counting();
+
+  bool allowed(Player player, Position coordinate);
+
+  void withState(void Function(Board, Rules) func) {
+    func.call(this._board, this._rules);
+  }
+
+  GameEventHandlers get eventHandlers => _eventHandlers;
 }
 
-class LocalGame extends Game {
-  LocalGame(Board board, Rules rules, Players players)
-      : super(board, rules, players);
 
-  void place(Position coordinate) {
-    var cp = this.players.current;
-    if (_allowedMove(cp, coordinate)) {
-      var caps = this.board.placeWithCapture(cp.stone, coordinate);
-      this.players.current.captures.addAll(caps);
-      this.rules.updateState(this._board);
-      this.players.nextTurn();
-    }
-  }
-
-  void pass() {
-    this.rules.pass(this.players.current);
-    this.players.nextTurn();
-  }
-
-  bool _allowedMove(Player cp, Position coordinate) {
-    return this._board.canPlaceWithCapture(cp.stone, coordinate) &&
-        !this._rules.inKo(cp.stone, coordinate);
-  }
-
-  @override
-  bool allowed(Position coordinate) {
-    return _allowedMove(this.players.current, coordinate);
-  }
-}
