@@ -4,31 +4,33 @@ import 'board.dart';
 
 typedef CurrentPlayerAction = void Function(Player player);
 
-abstract class Players {
-  void withCurrentPlayer(CurrentPlayerAction action) {
-    peekCurrentPlayer(action);
-    _updateNextPlayer();
+class Players {
+  final List<Player> playerInOrder;
+  int _turnCount;
+
+  Players(this.playerInOrder, {int startAtTurn = 0}) : _turnCount = startAtTurn;
+
+  Player get current =>
+      this.playerInOrder[_turnCount % this.playerInOrder.length];
+
+  void nextTurn() {
+    _turnCount++;
   }
-
-  void peekCurrentPlayer(CurrentPlayerAction action) {
-    action.call(_currentPlayer());
-  }
-
-  Player _currentPlayer();
-
-  void _updateNextPlayer() {}
 }
 
 class Player {
   static final Uuid uuids = Uuid();
   final UuidValue _id;
   final String color;
+  final Set<Stone> _captures = Set();
 
   Player(this.color) : this._id = uuids.v4obj();
 
   Stone get stone => Stone(color: color);
 
   UuidValue get id => _id;
+
+  Set<Stone> get captures => _captures;
 
   @override
   bool operator ==(Object other) =>

@@ -15,7 +15,7 @@ class GridDrawer extends BoardLayer{
 
   @override
   void draw(Canvas canvas, BoardCoordinatesManager coordMngr) {
-    var paint = this.theme.inkLinesPaint();
+    var paint = this.theme.gridSettings.inkPaint();
     coordMngr.columnEdgeVertices().forEach((column) {
       canvas.drawLine(column.first, column.last, paint);
     });

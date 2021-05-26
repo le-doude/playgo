@@ -37,7 +37,7 @@ class BoardCoordinatesManager {
     var frameSize = min(size.height, size.width);
     var frameRect =
     Rect.fromCenter(center: center, width: frameSize, height: frameSize);
-    var gridSize = frameSize * (theme.drawReferences ? 0.9 : 1.0);
+    var gridSize = frameSize * (theme.boardReferenceSettings.enabled ? 0.9 : 1.0);
     var gridRect =
     Rect.fromCenter(center: center, width: gridSize, height: gridSize);
     BoardCoordinatesManager coord = BoardCoordinatesManager(
@@ -50,7 +50,7 @@ class BoardCoordinatesManager {
         gridFrame.top + j * this.cellHeight);
   }
 
-  Offset fromCoordinate(BoardCoordinate coord) {
+  Offset fromCoordinate(Position coord) {
     return get(coord.column, coord.row);
   }
 
@@ -66,11 +66,11 @@ class BoardCoordinatesManager {
     return innerFrame.contains(coord);
   }
 
-  BoardCoordinate from(Offset eventCoord) {
+  Position from(Offset eventCoord) {
     if (!isInFrame(eventCoord)) {
       throw OutOfBoardOffsetError();
     }
-    return BoardCoordinate((eventCoord.dx - this.innerFrame.left) ~/ cellWidth,
+    return Position((eventCoord.dx - this.innerFrame.left) ~/ cellWidth,
         (eventCoord.dy - this.innerFrame.top) ~/ cellHeight);
   }
 

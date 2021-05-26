@@ -11,20 +11,20 @@ import 'board_layer.dart';
 class StonesLayer extends BoardLayer {
   static final Logger logger = Logger();
   final BoardTheme theme;
-  final Board board;
+  final BoardState board;
 
   StonesLayer(this.board, this.theme) : super(25);
 
   @override
   void draw(Canvas canvas, BoardCoordinatesManager coordMngr) {
-    this.board.intersections.forEach(
-        (intersection) => renderIntersection(canvas, coordMngr, intersection));
+    this.board.state.forEach(
+        (s) => renderIntersection(canvas, coordMngr, s));
   }
 
   void renderIntersection(Canvas canvas, BoardCoordinatesManager coordMngr,
-      Intersection intersection) {
+      StonePosition sp) {
     theme.stoneDrawers
-        .forColor(intersection.stone?.color)
-        .draw(canvas, coordMngr, intersection.coordinate);
+        .forColor(sp.color)
+        .draw(canvas, coordMngr, sp.position);
   }
 }
