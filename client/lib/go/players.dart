@@ -4,14 +4,25 @@ import 'board.dart';
 
 typedef CurrentPlayerAction = void Function(Player player);
 
-class Players {
+abstract class Players {
+  Player get current;
+
+  Iterable<Player> get players;
+
+  void nextTurn();
+}
+
+class LocalPlayers extends Players {
   final List<Player> playerInOrder;
   int _turnCount;
 
-  Players(this.playerInOrder, {int startAtTurn = 0}) : _turnCount = startAtTurn;
+  LocalPlayers(this.playerInOrder, {int startAtTurn = 0})
+      : _turnCount = startAtTurn;
 
   Player get current =>
       this.playerInOrder[_turnCount % this.playerInOrder.length];
+
+  Iterable<Player> get players => Set.unmodifiable(this.playerInOrder);
 
   void nextTurn() {
     _turnCount++;

@@ -13,7 +13,7 @@ abstract class Game {
   late final Map<Player, Set<Stone>> _captures;
 
   Game(this._board, this._rules, this._players) {
-    this._captures = Map.fromIterable(this._players.playerInOrder,
+    this._captures = Map.fromIterable(this._players.players,
         key: (p) => p, value: (p) => Set());
   }
 
