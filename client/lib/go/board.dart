@@ -7,7 +7,28 @@ typedef bool KoPredicate(Board board, Stone stone, Position coordinate);
 typedef void CaptureCallback(Stone stone);
 typedef void MoveCallback(Stone stone, Position coordinate);
 
-class Board extends ChangeNotifier {
+abstract class RenderableBoard extends ChangeNotifier {
+  List<StonePosition> get state;
+}
+
+class StonePosition {
+  final String color;
+  final Position position;
+
+  StonePosition(this.color, this.position);
+
+  @override
+  bool operator ==(Object other) =>
+      other is StonePosition &&
+      runtimeType == other.runtimeType &&
+      color == other.color &&
+          position == other.position;
+
+  @override
+  int get hashCode => color.hashCode ^ position.hashCode;
+}
+
+class Board extends RenderableBoard {
   final Layout layout;
   late final List<List<Intersection>> _intersections;
 
@@ -36,6 +57,25 @@ class Board extends ChangeNotifier {
     notifyListeners();
   }
 
+  Set<Stone> placeWithCapture(Stone stone, Position coordinate) {
+    var intersection = at(coordinate);
+    intersection.place(stone);
+    var capturedGroups = intersection
+        .neighbouringGroups()
+        .where((g) => g.color != stone.color && g.freedomsCount() <= 0);
+    var stones = capturedGroups.expand((e) => e.stones).toSet();
+    capturedGroups.forEach((g) => _removeGroupImpl(g));
+    try {
+      return stones;
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  bool canPlaceWithCapture(Stone stone, Position position) {
+    return at(position).canPlaceWithCapture(stone);
+  }
+
   void remove(Position coord) {
     at(coord).removeStone();
     notifyListeners();
@@ -47,6 +87,11 @@ class Board extends ChangeNotifier {
   }
 
   void removeGroup(Group group) {
+    _removeGroupImpl(group);
+    notifyListeners();
+  }
+
+  void _removeGroupImpl(Group group) {
     var stones = group.stones;
     var intersections =
         stones.map((e) => e.intersection).whereType<Intersection>().toSet();
@@ -57,7 +102,6 @@ class Board extends ChangeNotifier {
           .where((i) => stones.any((s) => i.contains(s))));
     }
     intersections.forEach((i) => i.removeStone(process: false));
-    notifyListeners();
   }
 
   void removeStone(Stone stone) {
@@ -70,6 +114,14 @@ class Board extends ChangeNotifier {
     inter.removeStone();
     notifyListeners();
   }
+
+  @override
+  // TODO: implement state
+  List<StonePosition> get state => this
+      .intersections
+      .where((element) => element.present)
+      .map((e) => StonePosition(e.stone!.color, e.coordinate))
+      .toList();
 }
 
 class Intersection {
@@ -91,6 +143,10 @@ class Intersection {
   Position get coordinate => _coordinate;
 
   Set<Intersection> get neighbours => _neighbours;
+
+  bool canPlaceWithCapture(Stone stone) {
+    return empty && (!wouldSuffocate(stone) || wouldCapture(stone));
+  }
 
   bool contains(Stone stone) {
     return stone.id == this._stone?.id;
@@ -138,23 +194,21 @@ class Intersection {
   bool get present => !empty;
 
   bool wouldSuffocate(Stone stone) {
-    // check if ALL neighbour have a stone of different color
+    // check if ANY neighbour is freedom or has same color
     var selfSuffocation =
-        !neighbours.any((i) => i.empty || stone.color == i.stone?.color);
-    // check if we are taking the last liberty of all the neighbouring group
-    // of the same color
-    var neighbourSuffocation =
-        neighbouringGroups().where((g) => g.color == stone.color).any((g) {
-      var f = g.freedoms();
-      return f.length > 1 && f.any((c) => c != this._coordinate);
-    });
-    return selfSuffocation || neighbourSuffocation;
+        () => !neighbours.any((i) => i.empty || stone.color == i.stone?.color);
+    // check if we are taking the last liberty of all our neighbours of same color
+    var neighbourSuffocation = () => neighbouringGroups().any((g) {
+          return g.color == stone.color && g.freedomsCount() == 1;
+        });
+    return selfSuffocation() || neighbourSuffocation();
   }
 
   bool wouldCapture(Stone stone) {
-    // check if any neighbour of different color has its last liberty
-    // in this specific coordinates
-    return neighbouringGroups().where((g) => g.color != stone.color).any((g) {
+    return neighbouringGroups().any((g) {
+      if (g.color == stone.color) {
+        return false;
+      }
       var f = g.freedoms();
       return f.length == 1 && f.first == this._coordinate;
     });

@@ -20,7 +20,7 @@ abstract class Game {
   void place(Position coordinate);
 
   void pass();
-  
+
   bool allowed(Position coordinate);
 }
 
@@ -31,17 +31,21 @@ class LocalGame extends Game {
   void place(Position coordinate) {
     var cp = this.players.current;
     if (_allowedMove(cp, coordinate)) {
-      this.board.place(cp.stone, coordinate);
+      var caps = this.board.placeWithCapture(cp.stone, coordinate);
+      this.players.current.captures.addAll(caps);
+      this.rules.updateState(this._board);
       this.players.nextTurn();
     }
   }
 
   void pass() {
+    this.rules.pass(this.players.current);
     this.players.nextTurn();
   }
 
   bool _allowedMove(Player cp, Position coordinate) {
-    return this._board.at(coordinate).empty;
+    return this._board.canPlaceWithCapture(cp.stone, coordinate) &&
+        !this._rules.inKo(cp.stone, coordinate);
   }
 
   @override

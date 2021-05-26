@@ -1,1 +1,13 @@
-class Rules {}
+import 'package:play_go_client/go/board.dart';
+import 'package:play_go_client/go/board/layout.dart';
+import 'package:play_go_client/go/players.dart';
+
+class Rules {
+  bool inKo(Stone stone, Position coordinate) {
+    return false;
+  }
+
+  void updateState(Board board) {}
+
+  void pass(Player current) {}
+}
