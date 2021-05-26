@@ -18,7 +18,7 @@ class StonesPreviewLayer extends BoardLayer {
     StonePreview? preview = this.holder.value;
     if (preview != null) {
       var drawer =
-          this.theme.stoneDrawers.forColor(preview.color, preview: true);
+          this.theme.previewDrawers.forColor(preview.color);
       drawer.draw(canvas, coordMngr, preview.coordinate);
     }
   }

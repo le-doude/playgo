@@ -17,14 +17,14 @@ class StonesLayer extends BoardLayer {
 
   @override
   void draw(Canvas canvas, BoardCoordinatesManager coordMngr) {
-    this.board.intersections.forEach(
-        (intersection) => renderIntersection(canvas, coordMngr, intersection));
+    this.board.state.forEach(
+        (s) => renderIntersection(canvas, coordMngr, s));
   }
 
   void renderIntersection(Canvas canvas, BoardCoordinatesManager coordMngr,
-      Intersection intersection) {
+      StonePosition sp) {
     theme.stoneDrawers
-        .forColor(intersection.stone?.color)
-        .draw(canvas, coordMngr, intersection.coordinate);
+        .forColor(sp.color)
+        .draw(canvas, coordMngr, sp.position);
   }
 }

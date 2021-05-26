@@ -6,7 +6,6 @@ import 'package:play_go_client/go/board/widget/painter/board_coordinates_manager
 import 'package:play_go_client/go/board/widget/painter/layers/board_layer.dart';
 
 class StoneShadowsLayer extends BoardLayer {
-
   final Board _board;
   final BoardTheme _theme;
 
@@ -18,13 +17,9 @@ class StoneShadowsLayer extends BoardLayer {
     var tx = coordMngr.cellWidth * 0.075;
     var ty = coordMngr.cellHeight * 0.075;
     canvas.translate(tx, ty);
-    this._board.intersections.forEach((inter) {
-      if (inter.present) {
-        this._theme.stoneDrawers.shadows.draw(
-            canvas, coordMngr, inter.coordinate);
-      }
+    this._board.state.forEach((s) {
+      this._theme.stoneDrawers.shadows.draw(canvas, coordMngr, s.position);
     });
     canvas.restore();
   }
-
 }
