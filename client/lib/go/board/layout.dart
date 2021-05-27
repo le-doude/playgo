@@ -83,6 +83,11 @@ class Position {
     var y = row + yIncr;
     return Position(x, y);
   }
+
+  @override
+  String toString() {
+    return 'Position{column: $column, row: $row}';
+  }
 }
 
 class InvalidCoordinatesError {}

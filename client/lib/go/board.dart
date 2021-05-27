@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 
 import 'board/layout.dart';
@@ -165,6 +166,8 @@ class BoardImpl extends Board {
 }
 
 class Intersection {
+  static final Logger logger = Logger();
+
   final BoardImpl _board;
   final Layout _layout;
   final Position _coordinate;
@@ -238,10 +241,26 @@ class Intersection {
     var selfSuffocation =
         () => !neighbours.any((i) => i.empty || stone.color == i.stone?.color);
     // check if we are taking the last liberty of all our neighbours of same color
-    var neighbourSuffocation = () => neighbouringGroups().any((g) {
-          return g.color == stone.color && g.freedomsCount() == 1;
-        });
-    return selfSuffocation() || neighbourSuffocation();
+    var suffocateAllNeighbours = () => !neighbouringGroups().any((g) =>
+        g.color == stone.color &&
+        g.freedoms().length >= 1 &&
+        g.freedoms().contains(this.coordinate));
+
+    var noNewLiberties = () => !neighbours.any((element) => element.empty);
+
+    var bool =
+        selfSuffocation() || (suffocateAllNeighbours() && noNewLiberties());
+    if (bool) {
+      logger.d({
+        "stone": stone.toString(),
+        "coordinates": this.coordinate.toString(),
+        "[A] self-suffocate": selfSuffocation(),
+        "[B] same-color-neighbours-suffocate": suffocateAllNeighbours(),
+        "[C] no-new-liberties": noNewLiberties(),
+        "A OR (B AND C)": bool
+      });
+    }
+    return bool;
   }
 
   bool wouldCapture(Stone stone) {
@@ -301,6 +320,11 @@ class Stone {
 
   void _resetGroup() {
     this.group = Group(stones: [this]);
+  }
+
+  @override
+  String toString() {
+    return 'Stone{color: $color}';
   }
 }
 
