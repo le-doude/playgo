@@ -7,25 +7,29 @@ import 'widget/theme/stone_drawer.dart';
 class BaseBoardTheme extends BoardTheme {
   final GridSettings gridSettings;
   final StoneDrawers stoneDrawers;
-  final PreviewDrawers previewDrawers;
+  final StoneDrawers previewDrawers;
   final BoardReferenceSettings boardReferenceSettings;
   final BackgroundSettings backgroundSettings;
   final double boardAspectRatio;
+  final double stoneSizeRatio;
 
   BaseBoardTheme(
       {GridSettings? gridSettings,
       StoneDrawers? stoneDrawers,
-      PreviewDrawers? previewDrawers,
+      StoneDrawers? previewDrawers,
       BoardReferenceSettings? boardReferenceSettings,
       BackgroundSettings? backgroundSettings,
-      double? boardAspectRatio})
+      double boardAspectRatio = 1.0,
+      double stoneSizeRatio = 0.93})
       : gridSettings = gridSettings ?? BaseGridSettings(),
-        stoneDrawers = stoneDrawers ?? StoneDrawers(),
-        previewDrawers = previewDrawers ?? PreviewDrawers(),
         boardReferenceSettings =
             boardReferenceSettings ?? BaseBoardReferenceSettings(),
         backgroundSettings = backgroundSettings ?? BaseBackgroundSettings(),
-        boardAspectRatio = boardAspectRatio ?? 42 / 43;
+        boardAspectRatio = boardAspectRatio,
+        stoneSizeRatio = stoneSizeRatio,
+        stoneDrawers = stoneDrawers ?? StoneDrawers(stoneSizeRatio),
+        previewDrawers =
+            previewDrawers ?? StoneDrawers(stoneSizeRatio, opacity: 0.75);
 }
 
 abstract class BoardTheme {
@@ -33,13 +37,15 @@ abstract class BoardTheme {
 
   StoneDrawers get stoneDrawers;
 
-  PreviewDrawers get previewDrawers;
+  StoneDrawers get previewDrawers;
 
   BoardReferenceSettings get boardReferenceSettings;
 
   BackgroundSettings get backgroundSettings;
 
   double get boardAspectRatio;
+
+  double get stoneSizeRatio;
 }
 
 class Themes {

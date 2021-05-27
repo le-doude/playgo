@@ -21,8 +21,8 @@ class StoneShadowsLayer extends BoardLayer {
     canvas.translate(tx, ty);
 
     this._board.value.forEach((s) {
-      double size = math.min(
-          coordMngr.cellWidth * 0.465 * 2, coordMngr.cellHeight * 0.465 * 2);
+      double size = math.min(coordMngr.cellWidth, coordMngr.cellHeight) *
+          this._theme.stoneSizeRatio;
       var stoneRect = Rect.fromCenter(
           center: coordMngr.fromCoordinate(s.position),
           width: size,

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -25,8 +26,11 @@ class NoopDrawer extends StoneDrawer {
 class GeometryStoneDrawer extends StoneDrawer {
   late final Paint? _fill;
   late final Paint? _stroke;
+  final double _stoneSizeRatio;
 
-  GeometryStoneDrawer({Color? fill, Color? stroke}) {
+  GeometryStoneDrawer(
+      {required double stoneSizeRatio, Color? fill, Color? stroke})
+      : this._stoneSizeRatio = stoneSizeRatio {
     this._fill = paint(fill, PaintingStyle.fill);
     this._stroke = paint(stroke, PaintingStyle.stroke);
   }
@@ -47,46 +51,38 @@ class GeometryStoneDrawer extends StoneDrawer {
     Position coordinate,
   ) {
     var center = coordinatesManager.fromCoordinate(coordinate);
-    var radius = coordinatesManager.cellHeight * 0.465;
-    _drawCircleIfPaintNotNull(canvas, center, radius, _fill);
-    _drawCircleIfPaintNotNull(canvas, center, radius, _stroke);
+    var size =
+        min(coordinatesManager.cellWidth, coordinatesManager.cellHeight) *
+            this._stoneSizeRatio;
+    var rect = Rect.fromCenter(center: center, width: size, height: size);
+    _drawCircleIfPaintNotNull(canvas, rect, _fill);
+    _drawCircleIfPaintNotNull(canvas, rect, _stroke);
   }
 
-  void _drawCircleIfPaintNotNull(
-      Canvas canvas, Offset center, double radius, Paint? paint) {
+  void _drawCircleIfPaintNotNull(Canvas canvas, Rect rect, Paint? paint) {
     if (paint != null) {
-      canvas.drawCircle(center, radius, paint);
+      var path = Path()..addOval(rect);
+      canvas.drawPath(path, paint);
     }
   }
 }
 
 class StoneDrawers {
-  static final StoneDrawer white =
-      GeometryStoneDrawer(fill: GoColors.WHITE, stroke: GoColors.GREY);
-  static final StoneDrawer black = GeometryStoneDrawer(fill: GoColors.BLACK);
   static final StoneDrawer noop = NoopDrawer();
 
-  static final Map<String, StoneDrawer> _dict = {
-    "white": white,
-    "black": black
-  };
+  late final Map<String, StoneDrawer> _dict;
 
-  StoneDrawer forColor(String? color) {
-    return _dict[color] ?? noop;
+  StoneDrawers(double stoneSizeRatio, {double opacity = 1.0}) {
+    this._dict = {
+      "white": GeometryStoneDrawer(
+          stoneSizeRatio: stoneSizeRatio,
+          fill: GoColors.WHITE.withOpacity(opacity),
+          stroke: GoColors.GREY.withOpacity(opacity)),
+      "black": GeometryStoneDrawer(
+          stoneSizeRatio: stoneSizeRatio,
+          fill: GoColors.BLACK.withOpacity(opacity))
+    };
   }
-}
-
-class PreviewDrawers {
-  static final StoneDrawer white = GeometryStoneDrawer(
-    fill: GoColors.WHITE.withOpacity(0.8),
-  );
-  static final StoneDrawer black =
-      GeometryStoneDrawer(fill: GoColors.BLACK.withOpacity(0.8));
-  static final StoneDrawer noop = NoopDrawer();
-  static final Map<String, StoneDrawer> _dict = {
-    "white": white,
-    "black": black
-  };
 
   StoneDrawer forColor(String? color) {
     return _dict[color] ?? noop;
