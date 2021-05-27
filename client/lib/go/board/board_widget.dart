@@ -14,7 +14,7 @@ class BoardWidget extends StatelessWidget {
 
   final BoardEventCallback? onClick;
   final BoardEventCallback? onHover;
-  final EventCallback? onMove;
+  final EventCallback? onMoveAway;
 
   BoardWidget(
       {Key? key,
@@ -24,7 +24,7 @@ class BoardWidget extends StatelessWidget {
       required StonePreviewHolder previewHolder,
       this.onClick,
       this.onHover,
-      this.onMove})
+      this.onMoveAway})
       : super(key: key) {
     this._boardRenderer = BoardRenderer(
         board: board,
@@ -42,7 +42,7 @@ class BoardWidget extends StatelessWidget {
         ),
         opaque: false,
         onHover: (event) => pointerToPosition(event, this.onHover),
-        onExit: (event) => this.onMove?.call());
+        onExit: (event) => this.onMoveAway?.call());
   }
 
   void pointerToPosition(PointerEvent event, BoardEventCallback? callback) {

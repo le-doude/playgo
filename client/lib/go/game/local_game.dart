@@ -6,7 +6,7 @@ import 'package:play_go_client/go/players.dart';
 import 'package:play_go_client/go/rules.dart';
 
 class LocalGame extends Game {
-  LocalGame(Board board, Rules rules, Players players)
+  LocalGame(Board board, Rules rules, PlayerTurnManager players)
       : super(board, rules, players);
 
   void place(Player player, Position coordinate) {

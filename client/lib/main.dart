@@ -4,7 +4,7 @@ import 'package:play_go_client/go/board/board_theme.dart';
 import 'package:play_go_client/go/board/board_widget.dart';
 import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/stone_preview_holder.dart';
-import 'package:play_go_client/go/game.dart';
+import 'package:play_go_client/go/game/action_manager.dart';
 import 'package:play_go_client/go/players.dart';
 import 'package:play_go_client/go/rules.dart';
 
@@ -66,23 +66,26 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
     // than having to individually change instances of widgets.
     var layout = Layouts.STANDARD_19_BY_19;
     var board = Board.make(layout);
-    var game = LocalGame(
-        board, Rules(), LocalPlayers([Player("black"), Player("white")]));
+    var actionManager = GameActionManager(LocalGame(board, Rules.japanese(),
+        PlayerTurnManager.local([Player("black"), Player("white")])));
     var previewHolder = StonePreviewHolder(null);
     var boardWidget = BoardWidget(
       board: board.notifier,
       theme: Themes.base,
       layout: layout,
       previewHolder: previewHolder,
-      onClick: (coord) => game.place(game.players.current, coord),
+      onClick: (coord) => actionManager
+          .withLocalPlayer((game, player) => {game.place(player, coord)}),
       onHover: (coord) {
-        if (game.allowed(game.players.current, coord)) {
-          previewHolder.value = StonePreview(game.players.current.color, coord);
-        } else {
-          previewHolder.clear();
-        }
+        actionManager.withLocalPlayer((game, player) {
+          if (game.allowed(player, coord)) {
+            previewHolder.value = StonePreview(player.color, coord);
+          } else {
+            previewHolder.clear();
+          }
+        });
       },
-      onMove: () => previewHolder.clear(),
+      onMoveAway: () => previewHolder.clear(),
     );
 
     return Scaffold(
@@ -94,7 +97,9 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
       body: Container(
           padding: EdgeInsets.all(10), child: Center(child: boardWidget)),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => game.pass(game.players.current),
+        onPressed: () => actionManager.withLocalPlayer((game, player) {
+          game.pass(player);
+        }),
         tooltip: 'Pass',
         child: Text('Pass'),
       ), // This trailing comma makes auto-formatting nicer for build methods.

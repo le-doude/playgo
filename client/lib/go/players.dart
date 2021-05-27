@@ -4,19 +4,26 @@ import 'board.dart';
 
 typedef CurrentPlayerAction = void Function(Player player);
 
-abstract class Players {
+abstract class PlayerTurnManager {
   Player get current;
 
   Iterable<Player> get players;
 
   void nextTurn();
+
+  PlayerTurnManager();
+
+  factory PlayerTurnManager.local(List<Player> playerInOrder,
+      {int startAtTurn = 0}) {
+    return _LocalPlayerTurnManagerImpl(playerInOrder, startAtTurn: startAtTurn);
+  }
 }
 
-class LocalPlayers extends Players {
+class _LocalPlayerTurnManagerImpl extends PlayerTurnManager {
   final List<Player> playerInOrder;
   int _turnCount;
 
-  LocalPlayers(this.playerInOrder, {int startAtTurn = 0})
+  _LocalPlayerTurnManagerImpl(this.playerInOrder, {int startAtTurn = 0})
       : _turnCount = startAtTurn;
 
   Player get current =>
@@ -33,12 +40,17 @@ class Player {
   static final Uuid uuids = Uuid();
   final UuidValue _id;
   final String color;
+  final bool _local;
 
-  Player(this.color) : this._id = uuids.v4obj();
+  Player(this.color, {bool local = true})
+      : this._id = uuids.v4obj(),
+        this._local = local;
 
   Stone get stone => Stone(color: color);
 
   UuidValue get id => _id;
+
+  bool get local => _local;
 
   @override
   bool operator ==(Object other) =>

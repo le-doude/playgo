@@ -8,7 +8,7 @@ import 'rules.dart';
 abstract class Game {
   final Board _board;
   final Rules _rules;
-  final Players _players;
+  final PlayerTurnManager _players;
   final GameEventHandlers _eventHandlers = GameEventHandlers();
   late final Map<Player, Set<Stone>> _captures;
 
@@ -23,7 +23,7 @@ abstract class Game {
 
   Rules get rules => _rules;
 
-  Players get players => _players;
+  PlayerTurnManager get players => _players;
 
   void resign(Player player); // can resign out of turn
 
