@@ -18,7 +18,7 @@ class BoardWidget extends StatelessWidget {
 
   BoardWidget(
       {Key? key,
-      required BoardState board,
+      required BoardNotifier board,
       required BoardTheme theme,
       required Layout layout,
       StonePreviewHolder? previewHolder,
@@ -35,12 +35,14 @@ class BoardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Listener(
-      onPointerHover: (event) => pointerToPosition(event, this.onHover),
-      onPointerUp: (event) => pointerToPosition(event, this.onClick),
-      onPointerMove: (event) => this.onMove?.call(),
-      child: this._boardRenderer,
-    );
+    return MouseRegion(
+        child: Listener(
+          onPointerUp: (event) => pointerToPosition(event, this.onClick),
+          child: this._boardRenderer,
+        ),
+        opaque: false,
+        onHover: (event) => pointerToPosition(event, this.onHover),
+        onExit: (event) => this.onMove?.call());
   }
 
   void pointerToPosition(PointerEvent event, BoardEventCallback? callback) {

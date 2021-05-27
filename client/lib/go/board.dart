@@ -3,12 +3,46 @@ import 'package:uuid/uuid.dart';
 
 import 'board/layout.dart';
 
-typedef bool KoPredicate(Board board, Stone stone, Position coordinate);
+typedef bool KoPredicate(BoardImpl board, Stone stone, Position coordinate);
 typedef void CaptureCallback(Stone stone);
 typedef void MoveCallback(Stone stone, Position coordinate);
 
-abstract class BoardState extends ChangeNotifier {
+abstract class Board {
+  static Board make(Layout layout) {
+    return BoardImpl(layout);
+  }
+
+  BoardNotifier get notifier;
+
   List<StonePosition> get state;
+
+  Intersection at(Position coordinate);
+
+  bool canPlace(Stone stone, Position position);
+
+  Set<Stone> place(Stone stone, Position coordinate);
+
+  void clear(Position coord);
+
+  void clearAll(List<Position> coordinates);
+
+  void clearBoard();
+
+  void removeGroup(Group group);
+
+  void removeStone(Stone stone);
+
+  void notifyStateChange() {
+    this.notifier.value = this.state;
+  }
+}
+
+class BoardNotifier extends ValueNotifier<List<StonePosition>> {
+  BoardNotifier(List<StonePosition> value) : super(value);
+
+  void update(Board state) {
+    this.value = state.state;
+  }
 }
 
 class StonePosition {
@@ -22,15 +56,16 @@ class StonePosition {
       other is StonePosition &&
       runtimeType == other.runtimeType &&
       color == other.color &&
-          position == other.position;
+      position == other.position;
 
   @override
   int get hashCode => color.hashCode ^ position.hashCode;
 }
 
-class Board extends BoardState {
+class BoardImpl extends Board {
   final Layout layout;
   late final List<List<Intersection>> _intersections;
+  late final BoardNotifier _notifier;
 
   Iterable<Intersection> get intersections =>
       _intersections.expand((element) => element);
@@ -38,7 +73,7 @@ class Board extends BoardState {
   Iterable<Group> get groups =>
       intersections.map((e) => e.stone?.group).whereType<Group>().toSet();
 
-  Board(this.layout) {
+  BoardImpl(this.layout) {
     this._intersections = this.layout.generateTable((int column, int row) =>
         Intersection(this, this.layout, Position(column, row)));
     this._intersections.forEach((element) {
@@ -46,18 +81,16 @@ class Board extends BoardState {
         intersection._linkNeighbours();
       });
     });
+    this._notifier = BoardNotifier(this.state);
   }
+
+  BoardNotifier get notifier => _notifier;
 
   Intersection at(Position coordinate) {
     return _intersections[coordinate.column][coordinate.row];
   }
 
-  void place(Stone stone, Position coordinate) {
-    at(coordinate).place(stone);
-    notifyListeners();
-  }
-
-  Set<Stone> placeWithCapture(Stone stone, Position coordinate) {
+  Set<Stone> place(Stone stone, Position coordinate) {
     var intersection = at(coordinate);
     intersection.place(stone);
     var capturedGroups = intersection
@@ -68,27 +101,34 @@ class Board extends BoardState {
     try {
       return stones;
     } finally {
-      notifyListeners();
+      notifyStateChange();
     }
   }
 
-  bool canPlaceWithCapture(Stone stone, Position position) {
+  bool canPlace(Stone stone, Position position) {
     return at(position).canPlaceWithCapture(stone);
   }
 
-  void remove(Position coord) {
+  void clear(Position coord) {
     at(coord).removeStone();
-    notifyListeners();
+    notifyStateChange();
   }
 
-  void removeAll(List<Position> coordinates) {
+  void clearAll(List<Position> coordinates) {
     coordinates.map((e) => at(e)).forEach((i) => i.removeStone());
-    notifyListeners();
+    notifyStateChange();
+  }
+
+  void clearBoard() {
+    this
+        .intersections
+        .forEach((intersection) => intersection.removeStone(process: false));
+    notifyStateChange();
   }
 
   void removeGroup(Group group) {
     _removeGroupImpl(group);
-    notifyListeners();
+    notifyStateChange();
   }
 
   void _removeGroupImpl(Group group) {
@@ -112,7 +152,7 @@ class Board extends BoardState {
             .expand((rows) => rows)
             .firstWhere((i) => i.contains(stone));
     inter.removeStone();
-    notifyListeners();
+    notifyStateChange();
   }
 
   @override
@@ -125,7 +165,7 @@ class Board extends BoardState {
 }
 
 class Intersection {
-  final Board _board;
+  final BoardImpl _board;
   final Layout _layout;
   final Position _coordinate;
   late final Set<Intersection> _neighbours;

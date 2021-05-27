@@ -17,7 +17,7 @@ class BoardRenderer extends StatelessWidget {
 
   BoardRenderer(
       {Key? key,
-      required BoardState board,
+      required BoardNotifier board,
       required this.theme,
       required Layout layout,
       StonePreviewHolder? previewHolder})

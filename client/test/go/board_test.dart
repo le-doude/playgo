@@ -6,7 +6,7 @@ void main() {
   var fiveByFive = Layout(5, 5, []);
   group('Board#place', () {
     test('will place in empty slot', () {
-      Board board = Board(fiveByFive);
+      BoardImpl board = BoardImpl(fiveByFive);
       var coordnates = Position(2, 2);
       var stone = Stone(color: "black");
       board.place(stone, coordnates);
@@ -27,7 +27,7 @@ void main() {
     });
 
     test('will place in empty slot on edge', () {
-      Board board = Board(fiveByFive);
+      BoardImpl board = BoardImpl(fiveByFive);
       var coordnates = Position(0, 2);
       var stone = Stone(color: "black");
       board.place(stone, coordnates);
@@ -50,7 +50,7 @@ void main() {
     });
 
     test('will place in empty slot on corner', () {
-      Board board = Board(fiveByFive);
+      BoardImpl board = BoardImpl(fiveByFive);
       var coordnates = Position(0, 0);
       var stone = Stone(color: "black");
       board.place(stone, coordnates);
@@ -73,7 +73,7 @@ void main() {
     });
 
     test('placing stones together merge groups', () {
-      Board board = Board(fiveByFive);
+      BoardImpl board = BoardImpl(fiveByFive);
 
       var coordnates = Position(2, 2);
       board.place(Stone(color: "black"), coordnates);
@@ -111,7 +111,7 @@ void main() {
     });
 
     test('placing stones together merge groups on edge', () {
-      Board board = Board(fiveByFive);
+      BoardImpl board = BoardImpl(fiveByFive);
 
       var coordnates = Position(0, 2);
       board.place(Stone(color: "black"), coordnates);
@@ -149,7 +149,7 @@ void main() {
     });
 
     test('placing stones together merge groups on corner', () {
-      Board board = Board(fiveByFive);
+      BoardImpl board = BoardImpl(fiveByFive);
 
       var coordnates = Position(0, 0);
       board.place(Stone(color: "black"), coordnates);
@@ -187,7 +187,7 @@ void main() {
     });
 
     test('placing stones of different color', () {
-      Board board = Board(fiveByFive);
+      BoardImpl board = BoardImpl(fiveByFive);
 
       var coordnates = Position(1, 1);
       board.place(Stone(color: "black"), coordnates);
@@ -221,7 +221,7 @@ void main() {
     });
 
     test('placing stones of different color in contact', () {
-      Board board = Board(fiveByFive);
+      BoardImpl board = BoardImpl(fiveByFive);
 
       var coordnates = Position(1, 1);
       board.place(Stone(color: "black"), coordnates);
@@ -262,7 +262,7 @@ void main() {
 
   group('Board#removeStone', () {
     test('triangle formation removing central stone', () {
-      Board board = Board(fiveByFive);
+      BoardImpl board = BoardImpl(fiveByFive);
       var coordnates = Position(2, 2);
       board.place(Stone(color: "black"), coordnates);
       expect(board
@@ -305,7 +305,7 @@ void main() {
 
       expect(board.groups.length, 1);
 
-      board.remove(Position(2, 3));
+      board.clear(Position(2, 3));
       expect(board.groups.length, 2);
       coordnates = Position(2, 2);
       expect(board
@@ -334,7 +334,7 @@ void main() {
     });
 
     test('cross formation remove central stone', () {
-      Board board = Board(fiveByFive);
+      BoardImpl board = BoardImpl(fiveByFive);
       board.place(Stone(color: "black"), Position(2, 2));
       board.place(Stone(color: "black"), Position(2, 1));
       board.place(Stone(color: "black"), Position(3, 2));
@@ -348,7 +348,7 @@ void main() {
           .freedomsCount(), 8);
       expect(board.groups.length, 1);
 
-      board.remove(Position(2, 2));
+      board.clear(Position(2, 2));
       expect(board.groups.length, 4);
       expect(board
           .at(Position(2, 1))
@@ -373,7 +373,7 @@ void main() {
     });
 
     test('remove stone near other color', () {
-      Board board = Board(fiveByFive);
+      BoardImpl board = BoardImpl(fiveByFive);
       board.place(Stone(color: "black"), Position(2, 2));
       board.place(Stone(color: "black"), Position(2, 1));
       board.place(Stone(color: "white"), Position(1, 2));
@@ -399,7 +399,7 @@ void main() {
 
   group('Board#removeGroup', () {
     test('complete remove of group', () {
-      Board board = Board(fiveByFive);
+      BoardImpl board = BoardImpl(fiveByFive);
       board.place(Stone(color: "black"), Position(2, 2));
       board.place(Stone(color: "black"), Position(2, 1));
       board.place(Stone(color: "black"), Position(3, 2));

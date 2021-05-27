@@ -64,14 +64,15 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    var board = Board(Layouts.STANDARD_19_BY_19);
+    var layout = Layouts.STANDARD_19_BY_19;
+    var board = Board.make(layout);
     var game = LocalGame(
         board, Rules(), LocalPlayers([Player("black"), Player("white")]));
     var previewHolder = StonePreviewHolder(null);
     var boardWidget = BoardWidget(
-      board: board,
+      board: board.notifier,
       theme: Themes.base,
-      layout: board.layout,
+      layout: layout,
       previewHolder: previewHolder,
       onClick: (coord) => game.place(game.players.current, coord),
       onHover: (coord) {

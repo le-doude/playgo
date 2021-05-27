@@ -15,7 +15,7 @@ import 'layers/stones_preview_layer.dart';
 
 class StonesPainter extends CustomPainter {
   static final Logger logger = Logger();
-  final BoardState board;
+  final BoardNotifier board;
   late final StonePreviewHolder? previewHolder;
   final BoardTheme theme;
   final Layout layout;
@@ -28,11 +28,11 @@ class StonesPainter extends CustomPainter {
   StonesPainter(this.board, this.theme, this.layout,
       {List<BoardLayer>? layeredComponents, StonePreviewHolder? previewHolder})
       : super(repaint: Listenable.merge([board, previewHolder])) {
-    this.layers.add(StonesLayer(this.board, theme));
+    this.layers.add(StonesLayer(board, theme));
     if (previewHolder != null) {
       this.layers.add(StonesPreviewLayer(previewHolder, theme));
     }
-    this.layers.add(StoneShadowsLayer(this.board, this.theme));
+    this.layers.add(StoneShadowsLayer(board, this.theme));
     this.layers.addAll(layeredComponents ?? []);
     this.layers.sort((l, r) => l.priority.compareTo(r.priority));
   }

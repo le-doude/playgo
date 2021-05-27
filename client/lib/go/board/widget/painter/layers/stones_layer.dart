@@ -11,13 +11,13 @@ import 'board_layer.dart';
 class StonesLayer extends BoardLayer {
   static final Logger logger = Logger();
   final BoardTheme theme;
-  final BoardState board;
+  final BoardNotifier board;
 
   StonesLayer(this.board, this.theme) : super(25);
 
   @override
   void draw(Canvas canvas, BoardCoordinates coordMngr) {
-    this.board.state.forEach(
+    this.board.value.forEach(
         (s) => renderIntersection(canvas, coordMngr, s));
   }
 

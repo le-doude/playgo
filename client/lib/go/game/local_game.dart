@@ -21,7 +21,7 @@ class LocalGame extends Game {
   }
 
   void _play(Player player, Position coordinate) {
-    var caps = this.board.placeWithCapture(player.stone, coordinate);
+    var caps = this.board.place(player.stone, coordinate);
     this.captures[player]?.addAll(caps);
     this.eventHandlers.stonePlacedNotifier.notify(StonePlacedEvent(
         -1, player, player.color, coordinate, caps, DateTime.now()));
@@ -45,7 +45,7 @@ class LocalGame extends Game {
   }
 
   bool _allowedMove(Player player, Position coordinate) {
-    return this.board.canPlaceWithCapture(player.stone, coordinate) &&
+    return this.board.canPlace(player.stone, coordinate) &&
         !this.rules.inKo(player.stone, coordinate);
   }
 
