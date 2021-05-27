@@ -64,9 +64,6 @@ class StoneDrawers {
   static final StoneDrawer white =
       GeometryStoneDrawer(fill: GoColors.WHITE, stroke: GoColors.GREY);
   static final StoneDrawer black = GeometryStoneDrawer(fill: GoColors.BLACK);
-  static final StoneDrawer shadowDrawer =
-      GeometryStoneDrawer(fill: GoColors.BLACK.withOpacity(0.25));
-
   static final StoneDrawer noop = NoopDrawer();
 
   static final Map<String, StoneDrawer> _dict = {
@@ -77,8 +74,6 @@ class StoneDrawers {
   StoneDrawer forColor(String? color) {
     return _dict[color] ?? noop;
   }
-
-  StoneDrawer get shadows => StoneDrawers.shadowDrawer;
 }
 
 class PreviewDrawers {
