@@ -95,7 +95,7 @@ class BoardImpl extends Board {
     var intersection = at(coordinate);
     intersection.place(stone);
     var capturedGroups = intersection
-        .neighbouringGroups()
+        ._neighbouringGroups()
         .where((g) => g.color != stone.color && g.freedomsCount() <= 0);
     var stones = capturedGroups.expand((e) => e.stones).toSet();
     capturedGroups.forEach((g) => _removeGroupImpl(g));
@@ -107,23 +107,24 @@ class BoardImpl extends Board {
   }
 
   bool canPlace(Stone stone, Position position) {
-    return at(position).canPlaceWithCapture(stone);
+    return at(position).canPlace(stone);
   }
 
   void clear(Position coord) {
-    at(coord).removeStone();
+    at(coord).clear();
     notifyStateChange();
   }
 
   void clearAll(List<Position> coordinates) {
-    coordinates.map((e) => at(e)).forEach((i) => i.removeStone());
+    coordinates.map((e) => at(e)).forEach((i) => i.clear());
     notifyStateChange();
   }
 
   void clearBoard() {
-    this
-        .intersections
-        .forEach((intersection) => intersection.removeStone(process: false));
+    this.intersections.forEach((i) {
+      i.stone?._resetGroup(); // separate groups to avoid reprocessing
+      i.clear();
+    });
     notifyStateChange();
   }
 
@@ -142,7 +143,10 @@ class BoardImpl extends Board {
           .expand((rows) => rows)
           .where((i) => stones.any((s) => i.contains(s))));
     }
-    intersections.forEach((i) => i.removeStone(process: false));
+    intersections.forEach((i) {
+      i.stone?._resetGroup(); // separate groups to avoid reprocessing
+      i.clear();
+    });
   }
 
   void removeStone(Stone stone) {
@@ -152,7 +156,7 @@ class BoardImpl extends Board {
             ._intersections
             .expand((rows) => rows)
             .firstWhere((i) => i.contains(stone));
-    inter.removeStone();
+    inter.clear();
     notifyStateChange();
   }
 
@@ -187,8 +191,8 @@ class Intersection {
 
   Set<Intersection> get neighbours => _neighbours;
 
-  bool canPlaceWithCapture(Stone stone) {
-    return empty && (!wouldSuffocate(stone) || wouldCapture(stone));
+  bool canPlace(Stone stone) {
+    return empty && (!_wouldSuffocate(stone) || _wouldCapture(stone));
   }
 
   bool contains(Stone stone) {
@@ -210,15 +214,12 @@ class Intersection {
     _updateGroups();
   }
 
-  Stone removeStone({bool process = true}) {
+  Stone clear() {
     var old = this._stone!;
     this._stone = null;
-    // old.intersection = null;
-    if (process) {
-      Set<Stone> oldGroup = Set.from(old.group.stones);
-      oldGroup.remove(old);
-      _remakeGroup(oldGroup);
-    }
+    Set<Stone> oldGroup = Set.from(old.group.stones);
+    oldGroup.remove(old);
+    _remakeGroup(oldGroup);
     return old;
   }
 
@@ -236,12 +237,12 @@ class Intersection {
 
   bool get present => !empty;
 
-  bool wouldSuffocate(Stone stone) {
+  bool _wouldSuffocate(Stone stone) {
     // check if ANY neighbour is freedom or has same color
     var selfSuffocation =
         () => !neighbours.any((i) => i.empty || stone.color == i.stone?.color);
     // check if we are taking the last liberty of all our neighbours of same color
-    var suffocateAllNeighbours = () => !neighbouringGroups().any((g) =>
+    var suffocateAllNeighbours = () => !_neighbouringGroups().any((g) =>
         g.color == stone.color &&
         g.freedoms().length >= 1 &&
         g.freedoms().contains(this.coordinate));
@@ -263,8 +264,8 @@ class Intersection {
     return bool;
   }
 
-  bool wouldCapture(Stone stone) {
-    return neighbouringGroups().any((g) {
+  bool _wouldCapture(Stone stone) {
+    return _neighbouringGroups().any((g) {
       if (g.color == stone.color) {
         return false;
       }
@@ -273,7 +274,7 @@ class Intersection {
     });
   }
 
-  Set<Group> neighbouringGroups() {
+  Set<Group> _neighbouringGroups() {
     return this
         .neighbours
         .map((i) => i.stone?.group)
