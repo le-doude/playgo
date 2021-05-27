@@ -21,7 +21,7 @@ class BoardWidget extends StatelessWidget {
       required BoardNotifier board,
       required BoardTheme theme,
       required Layout layout,
-      StonePreviewHolder? previewHolder,
+      required StonePreviewHolder previewHolder,
       this.onClick,
       this.onHover,
       this.onMove})

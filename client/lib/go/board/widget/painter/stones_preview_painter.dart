@@ -13,9 +13,9 @@ import 'layers/board_layer.dart';
 import 'layers/stones_layer.dart';
 import 'layers/stones_preview_layer.dart';
 
-class StonesPainter extends CustomPainter {
+class StonesPreviewPainter extends CustomPainter {
   static final Logger logger = Logger();
-  final BoardNotifier board;
+  final StonePreviewHolder previewHolder;
   final BoardTheme theme;
   final Layout layout;
   final List<BoardLayer> layers = List.empty(growable: true);
@@ -24,11 +24,10 @@ class StonesPainter extends CustomPainter {
 
   BoardCoordinates get coordinatesManager => _coordinatesManager!;
 
-  StonesPainter(this.board, this.theme, this.layout,
+  StonesPreviewPainter(this.theme, this.layout, this.previewHolder,
       {List<BoardLayer>? layeredComponents})
-      : super(repaint: board) {
-    this.layers.add(StonesLayer(board, theme));
-    this.layers.add(StoneShadowsLayer(board, this.theme));
+      : super(repaint: previewHolder) {
+    this.layers.add(StonesPreviewLayer(previewHolder, theme));
     this.layers.addAll(layeredComponents ?? []);
     this.layers.sort((l, r) => l.priority.compareTo(r.priority));
   }
