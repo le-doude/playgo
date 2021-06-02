@@ -11,7 +11,7 @@ internal class `board intersection integration test` {
         val pos = Board.Position(2, 2)
         board.place(pos, Colors.White)
         val found = board.state().find { p -> p.position == pos }
-        assertThat(found).isNotNull()
+        assertThat(found).isNotNull
         assertThat(found!!.position).isEqualTo(pos)
         assertThat(found.color).isEqualTo(Colors.White)
     }

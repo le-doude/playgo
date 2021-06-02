@@ -9,7 +9,7 @@ internal class `stones groups unit test` {
     @Test
     fun `a single stone has group containing only the stone itself`() {
         val stone = Stone(Colors.Black, mockk())
-        assertThat(stone.group).isNotNull()
+        assertThat(stone.group).isNotNull
         assertThat(stone.group.stones).containsExactly(stone)
     }
 

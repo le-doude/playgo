@@ -5,21 +5,21 @@ data class Stone(
     internal val intersection: Board.Intersection,
     val number: Int = -1,
 ) {
-    var group: Group = Group(stones = setOf(this))
+    var group: Group = Group(setOf(this))
 
     val position: Board.Position
         get() = intersection.position
 
     fun link(other: Stone) {
         if (this.color == other.color) {
-            Group.merge(this.group, other.group);
+            Group.merge(this.group, other.group)
         }
     }
 
     data class Group(val stones: Set<Stone>) {
         fun freedoms(): Set<Board.Position> {
             return this.stones.flatMap { s -> s.intersection.neighbours }
-                .filter { intersection -> intersection.empty() }
+                .filter { intersection -> intersection.empty }
                 .map { intersection -> intersection.position }
                 .toSet()
         }
@@ -31,7 +31,7 @@ data class Stone(
                 }
                 val stones: Set<Stone> = setOf(*left.stones.toTypedArray(), *right.stones.toTypedArray())
                 val group = Group(stones = stones)
-                stones.forEach { stone -> stone.group = group };
+                stones.forEach { stone -> stone.group = group }
                 return group
             }
         }
