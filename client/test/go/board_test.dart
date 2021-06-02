@@ -11,16 +11,16 @@ void main() {
       var stone = Stone(color: "black");
       board.place(stone, coordnates);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone, stone);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .stones
           .length, 1);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .freedomsCount(), 4);
@@ -32,17 +32,17 @@ void main() {
       var stone = Stone(color: "black");
       board.place(stone, coordnates);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone, stone);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .stones
           .length, 1);
       expect(stone.group.stones.length, 1);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .freedomsCount(), 3);
@@ -55,17 +55,17 @@ void main() {
       var stone = Stone(color: "black");
       board.place(stone, coordnates);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone, stone);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .stones
           .length, 1);
       expect(stone.group.stones.length, 1);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .freedomsCount(), 2);
@@ -78,13 +78,13 @@ void main() {
       var coordnates = Position(2, 2);
       board.place(Stone(color: "black"), coordnates);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .stones
           .length, 1);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .freedomsCount(), 4);
@@ -92,20 +92,20 @@ void main() {
       var coordnates2 = Position(2, 3);
       board.place(Stone(color: "black"), coordnates2);
       expect(board
-          .at(coordnates2)
+          .get(coordnates2)
           .stone
           ?.group
           .stones
           .length, 2);
       expect(board
-          .at(coordnates2)
+          .get(coordnates2)
           .stone
           ?.group
           .freedomsCount(), 6);
 
       expect(board.groups.length, 1);
       expect(board.groups.first, board
-          .at(coordnates2)
+          .get(coordnates2)
           .stone
           ?.group);
     });
@@ -116,13 +116,13 @@ void main() {
       var coordnates = Position(0, 2);
       board.place(Stone(color: "black"), coordnates);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .stones
           .length, 1);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .freedomsCount(), 3);
@@ -130,20 +130,20 @@ void main() {
       var coordnates2 = Position(0, 1);
       board.place(Stone(color: "black"), coordnates2);
       expect(board
-          .at(coordnates2)
+          .get(coordnates2)
           .stone
           ?.group
           .stones
           .length, 2);
       expect(board
-          .at(coordnates2)
+          .get(coordnates2)
           .stone
           ?.group
           .freedomsCount(), 4);
 
       expect(board.groups.length, 1);
       expect(board.groups.first, board
-          .at(coordnates2)
+          .get(coordnates2)
           .stone
           ?.group);
     });
@@ -154,13 +154,13 @@ void main() {
       var coordnates = Position(0, 0);
       board.place(Stone(color: "black"), coordnates);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .stones
           .length, 1);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .freedomsCount(), 2);
@@ -168,20 +168,20 @@ void main() {
       var coordnates2 = Position(0, 1);
       board.place(Stone(color: "black"), coordnates2);
       expect(board
-          .at(coordnates2)
+          .get(coordnates2)
           .stone
           ?.group
           .stones
           .length, 2);
       expect(board
-          .at(coordnates2)
+          .get(coordnates2)
           .stone
           ?.group
           .freedomsCount(), 3);
 
       expect(board.groups.length, 1);
       expect(board.groups.first, board
-          .at(coordnates2)
+          .get(coordnates2)
           .stone
           ?.group);
     });
@@ -192,13 +192,13 @@ void main() {
       var coordnates = Position(1, 1);
       board.place(Stone(color: "black"), coordnates);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .stones
           .length, 1);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .freedomsCount(), 4);
@@ -206,13 +206,13 @@ void main() {
       var coordnates2 = Position(3, 3);
       board.place(Stone(color: "white"), coordnates2);
       expect(board
-          .at(coordnates2)
+          .get(coordnates2)
           .stone
           ?.group
           .stones
           .length, 1);
       expect(board
-          .at(coordnates2)
+          .get(coordnates2)
           .stone
           ?.group
           .freedomsCount(), 4);
@@ -226,13 +226,13 @@ void main() {
       var coordnates = Position(1, 1);
       board.place(Stone(color: "black"), coordnates);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .stones
           .length, 1);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .freedomsCount(), 4);
@@ -240,18 +240,18 @@ void main() {
       var coordnates2 = Position(1, 2);
       board.place(Stone(color: "white"), coordnates2);
       expect(board
-          .at(coordnates2)
+          .get(coordnates2)
           .stone
           ?.group
           .stones
           .length, 1);
       expect(board
-          .at(coordnates2)
+          .get(coordnates2)
           .stone
           ?.group
           .freedomsCount(), 3);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .freedomsCount(), 3);
@@ -266,39 +266,39 @@ void main() {
       var coordnates = Position(2, 2);
       board.place(Stone(color: "black"), coordnates);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .stones
           .length, 1);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .freedomsCount(), 4);
       coordnates = Position(2, 3);
       board.place(Stone(color: "black"), coordnates);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .stones
           .length, 2);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .freedomsCount(), 6);
       coordnates = Position(3, 3);
       board.place(Stone(color: "black"), coordnates);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .stones
           .length, 3);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .freedomsCount(), 7);
@@ -309,25 +309,25 @@ void main() {
       expect(board.groups.length, 2);
       coordnates = Position(2, 2);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .stones
           .length, 1);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .freedomsCount(), 4);
       coordnates = Position(3, 3);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .stones
           .length, 1);
       expect(board
-          .at(coordnates)
+          .get(coordnates)
           .stone
           ?.group
           .freedomsCount(), 4);
@@ -342,7 +342,7 @@ void main() {
       board.place(Stone(color: "black"), Position(1, 2));
 
       expect(board
-          .at(Position(2, 2))
+          .get(Position(2, 2))
           .stone
           ?.group
           .freedomsCount(), 8);
@@ -351,22 +351,22 @@ void main() {
       board.clear(Position(2, 2));
       expect(board.groups.length, 4);
       expect(board
-          .at(Position(2, 1))
+          .get(Position(2, 1))
           .stone
           ?.group
           .freedomsCount(), 4);
       expect(board
-          .at(Position(3, 2))
+          .get(Position(3, 2))
           .stone
           ?.group
           .freedomsCount(), 4);
       expect(board
-          .at(Position(2, 3))
+          .get(Position(2, 3))
           .stone
           ?.group
           .freedomsCount(), 4);
       expect(board
-          .at(Position(1, 2))
+          .get(Position(1, 2))
           .stone
           ?.group
           .freedomsCount(), 4);
@@ -381,15 +381,15 @@ void main() {
       expect(board.groups.length, 2);
 
       board.removeStone(board
-          .at(Position(2, 1))
+          .get(Position(2, 1))
           .stone!);
       expect(board
-          .at(Position(2, 2))
+          .get(Position(2, 2))
           .stone!
           .group
           .freedomsCount(), 3);
       expect(board
-          .at(Position(1, 2))
+          .get(Position(1, 2))
           .stone!
           .group
           .freedomsCount(), 5);
@@ -407,41 +407,41 @@ void main() {
       board.place(Stone(color: "black"), Position(1, 2));
 
       expect(board
-          .at(Position(2, 2))
+          .get(Position(2, 2))
           .present, true);
       expect(board
-          .at(Position(2, 1))
+          .get(Position(2, 1))
           .present, true);
       expect(board
-          .at(Position(3, 2))
+          .get(Position(3, 2))
           .present, true);
       expect(board
-          .at(Position(2, 3))
+          .get(Position(2, 3))
           .present, true);
       expect(board
-          .at(Position(1, 2))
+          .get(Position(1, 2))
           .present, true);
 
       Group group = board
-          .at(Position(2, 2))
+          .get(Position(2, 2))
           .stone!
           .group;
       board.removeGroup(group);
 
       expect(board
-          .at(Position(2, 2))
+          .get(Position(2, 2))
           .empty, true);
       expect(board
-          .at(Position(2, 1))
+          .get(Position(2, 1))
           .empty, true);
       expect(board
-          .at(Position(3, 2))
+          .get(Position(3, 2))
           .empty, true);
       expect(board
-          .at(Position(2, 3))
+          .get(Position(2, 3))
           .empty, true);
       expect(board
-          .at(Position(1, 2))
+          .get(Position(1, 2))
           .empty, true);
     });
   });

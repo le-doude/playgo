@@ -43,11 +43,11 @@ class Board(val columns: Int, val rows: Int) {
                         && i.stone?.group?.freedoms()?.singleOrNull() == this.position
             }
             if (wouldCapture) return true
-            val getFreedomsFromNeighboursGroup = neighbours.any { i ->
+            val freedomsFromNeighboursGroup = neighbours.any { i ->
                 color == i.stone?.color &&
                         i.stone?.group?.freedoms()?.any { p -> p != this.position } == true
             }
-            return getFreedomsFromNeighboursGroup
+            return freedomsFromNeighboursGroup
         }
 
         val empty: Boolean

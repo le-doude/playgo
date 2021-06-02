@@ -17,7 +17,7 @@ abstract class Board {
 
   List<StonePosition> get state;
 
-  Intersection at(Position coordinate);
+  Intersection get(Position coordinate);
 
   bool canPlace(Stone stone, Position position);
 
@@ -87,12 +87,12 @@ class BoardImpl extends Board {
 
   BoardNotifier get notifier => _notifier;
 
-  Intersection at(Position coordinate) {
+  Intersection get(Position coordinate) {
     return _intersections[coordinate.column][coordinate.row];
   }
 
   Set<Stone> place(Stone stone, Position coordinate) {
-    var intersection = at(coordinate);
+    var intersection = get(coordinate);
     intersection.place(stone);
     var capturedGroups = intersection
         ._neighbouringGroups()
@@ -107,16 +107,16 @@ class BoardImpl extends Board {
   }
 
   bool canPlace(Stone stone, Position position) {
-    return at(position).canPlace(stone);
+    return get(position).canPlace(stone);
   }
 
   void clear(Position coord) {
-    at(coord).clear();
+    get(coord).clear();
     notifyStateChange();
   }
 
   void clearAll(List<Position> coordinates) {
-    coordinates.map((e) => at(e)).forEach((i) => i.clear());
+    coordinates.map((e) => get(e)).forEach((i) => i.clear());
     notifyStateChange();
   }
 
@@ -192,7 +192,23 @@ class Intersection {
   Set<Intersection> get neighbours => _neighbours;
 
   bool canPlace(Stone stone) {
-    return empty && (!_wouldSuffocate(stone) || _wouldCapture(stone));
+    // return empty && (!_wouldSuffocate(stone) || _wouldCapture(stone));
+    var hasDirectLiberties = neighbours.any((i) => i.empty);
+    if (hasDirectLiberties) return true;
+
+    var wouldCapture = neighbours.any((i) {
+      var freedoms = i.stone?.group?.freedoms();
+      return stone.color != i.stone?.color &&
+          freedoms?.length == 1 &&
+          freedoms?.contains(this._coordinate) == true;
+    });
+    if(wouldCapture) return true;
+
+    var freedomsFromNeighboursGroup = neighbours.any((i) =>
+      stone.color == i.stone?.color &&
+        i.stone?.group?.freedoms()?.any((p) => p != this._coordinate) == true
+    );
+    return freedomsFromNeighboursGroup;
   }
 
   bool contains(Stone stone) {
@@ -204,7 +220,7 @@ class Intersection {
   void _linkNeighbours() {
     var temp = _layout
         .computeNeighbours(this._coordinate)
-        .map((e) => this._board.at(e));
+        .map((e) => this._board.get(e));
     _neighbours = Set.unmodifiable(temp);
   }
 
@@ -236,43 +252,6 @@ class Intersection {
   bool get empty => _stone == null;
 
   bool get present => !empty;
-
-  bool _wouldSuffocate(Stone stone) {
-    // check if ANY neighbour is freedom or has same color
-    var selfSuffocation =
-        () => !neighbours.any((i) => i.empty || stone.color == i.stone?.color);
-    // check if we are taking the last liberty of all our neighbours of same color
-    var suffocateAllNeighbours = () => !_neighbouringGroups().any((g) =>
-        g.color == stone.color &&
-        g.freedoms().length >= 1 &&
-        g.freedoms().contains(this.coordinate));
-
-    var noNewLiberties = () => !neighbours.any((element) => element.empty);
-
-    var bool =
-        selfSuffocation() || (suffocateAllNeighbours() && noNewLiberties());
-    if (bool) {
-      logger.d({
-        "stone": stone.toString(),
-        "coordinates": this.coordinate.toString(),
-        "[A] self-suffocate": selfSuffocation(),
-        "[B] same-color-neighbours-suffocate": suffocateAllNeighbours(),
-        "[C] no-new-liberties": noNewLiberties(),
-        "A OR (B AND C)": bool
-      });
-    }
-    return bool;
-  }
-
-  bool _wouldCapture(Stone stone) {
-    return _neighbouringGroups().any((g) {
-      if (g.color == stone.color) {
-        return false;
-      }
-      var f = g.freedoms();
-      return f.length == 1 && f.first == this._coordinate;
-    });
-  }
 
   Set<Group> _neighbouringGroups() {
     return this
