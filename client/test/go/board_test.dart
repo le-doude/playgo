@@ -8,7 +8,7 @@ void main() {
     test('will place in empty slot', () {
       BoardImpl board = BoardImpl(fiveByFive);
       var coordnates = Position(2, 2);
-      var stone = Stone(color: "black");
+      var stone = Stone(color: StoneColors.Black);
       board.place(stone, coordnates);
       expect(board
           .get(coordnates)
@@ -29,7 +29,7 @@ void main() {
     test('will place in empty slot on edge', () {
       BoardImpl board = BoardImpl(fiveByFive);
       var coordnates = Position(0, 2);
-      var stone = Stone(color: "black");
+      var stone = Stone(color: StoneColors.Black);
       board.place(stone, coordnates);
       expect(board
           .get(coordnates)
@@ -52,7 +52,7 @@ void main() {
     test('will place in empty slot on corner', () {
       BoardImpl board = BoardImpl(fiveByFive);
       var coordnates = Position(0, 0);
-      var stone = Stone(color: "black");
+      var stone = Stone(color: StoneColors.Black);
       board.place(stone, coordnates);
       expect(board
           .get(coordnates)
@@ -76,7 +76,7 @@ void main() {
       BoardImpl board = BoardImpl(fiveByFive);
 
       var coordnates = Position(2, 2);
-      board.place(Stone(color: "black"), coordnates);
+      board.place(Stone(color: StoneColors.Black), coordnates);
       expect(board
           .get(coordnates)
           .stone
@@ -90,7 +90,7 @@ void main() {
           .freedomsCount(), 4);
 
       var coordnates2 = Position(2, 3);
-      board.place(Stone(color: "black"), coordnates2);
+      board.place(Stone(color: StoneColors.Black), coordnates2);
       expect(board
           .get(coordnates2)
           .stone
@@ -114,7 +114,7 @@ void main() {
       BoardImpl board = BoardImpl(fiveByFive);
 
       var coordnates = Position(0, 2);
-      board.place(Stone(color: "black"), coordnates);
+      board.place(Stone(color: StoneColors.Black), coordnates);
       expect(board
           .get(coordnates)
           .stone
@@ -128,7 +128,7 @@ void main() {
           .freedomsCount(), 3);
 
       var coordnates2 = Position(0, 1);
-      board.place(Stone(color: "black"), coordnates2);
+      board.place(Stone(color: StoneColors.Black), coordnates2);
       expect(board
           .get(coordnates2)
           .stone
@@ -152,7 +152,7 @@ void main() {
       BoardImpl board = BoardImpl(fiveByFive);
 
       var coordnates = Position(0, 0);
-      board.place(Stone(color: "black"), coordnates);
+      board.place(Stone(color: StoneColors.Black), coordnates);
       expect(board
           .get(coordnates)
           .stone
@@ -166,7 +166,7 @@ void main() {
           .freedomsCount(), 2);
 
       var coordnates2 = Position(0, 1);
-      board.place(Stone(color: "black"), coordnates2);
+      board.place(Stone(color: StoneColors.Black), coordnates2);
       expect(board
           .get(coordnates2)
           .stone
@@ -190,7 +190,7 @@ void main() {
       BoardImpl board = BoardImpl(fiveByFive);
 
       var coordnates = Position(1, 1);
-      board.place(Stone(color: "black"), coordnates);
+      board.place(Stone(color: StoneColors.Black), coordnates);
       expect(board
           .get(coordnates)
           .stone
@@ -204,7 +204,7 @@ void main() {
           .freedomsCount(), 4);
 
       var coordnates2 = Position(3, 3);
-      board.place(Stone(color: "white"), coordnates2);
+      board.place(Stone(color:StoneColors.White), coordnates2);
       expect(board
           .get(coordnates2)
           .stone
@@ -224,7 +224,7 @@ void main() {
       BoardImpl board = BoardImpl(fiveByFive);
 
       var coordnates = Position(1, 1);
-      board.place(Stone(color: "black"), coordnates);
+      board.place(Stone(color: StoneColors.Black), coordnates);
       expect(board
           .get(coordnates)
           .stone
@@ -238,7 +238,7 @@ void main() {
           .freedomsCount(), 4);
 
       var coordnates2 = Position(1, 2);
-      board.place(Stone(color: "white"), coordnates2);
+      board.place(Stone(color: StoneColors.White), coordnates2);
       expect(board
           .get(coordnates2)
           .stone
@@ -264,7 +264,7 @@ void main() {
     test('triangle formation removing central stone', () {
       BoardImpl board = BoardImpl(fiveByFive);
       var coordnates = Position(2, 2);
-      board.place(Stone(color: "black"), coordnates);
+      board.place(Stone(color: StoneColors.Black), coordnates);
       expect(board
           .get(coordnates)
           .stone
@@ -277,7 +277,7 @@ void main() {
           ?.group
           .freedomsCount(), 4);
       coordnates = Position(2, 3);
-      board.place(Stone(color: "black"), coordnates);
+      board.place(Stone(color: StoneColors.Black), coordnates);
       expect(board
           .get(coordnates)
           .stone
@@ -290,7 +290,7 @@ void main() {
           ?.group
           .freedomsCount(), 6);
       coordnates = Position(3, 3);
-      board.place(Stone(color: "black"), coordnates);
+      board.place(Stone(color: StoneColors.Black), coordnates);
       expect(board
           .get(coordnates)
           .stone
@@ -335,11 +335,11 @@ void main() {
 
     test('cross formation remove central stone', () {
       BoardImpl board = BoardImpl(fiveByFive);
-      board.place(Stone(color: "black"), Position(2, 2));
-      board.place(Stone(color: "black"), Position(2, 1));
-      board.place(Stone(color: "black"), Position(3, 2));
-      board.place(Stone(color: "black"), Position(2, 3));
-      board.place(Stone(color: "black"), Position(1, 2));
+      board.place(Stone(color: StoneColors.Black), Position(2, 2));
+      board.place(Stone(color: StoneColors.Black), Position(2, 1));
+      board.place(Stone(color: StoneColors.Black), Position(3, 2));
+      board.place(Stone(color: StoneColors.Black), Position(2, 3));
+      board.place(Stone(color: StoneColors.Black), Position(1, 2));
 
       expect(board
           .get(Position(2, 2))
@@ -374,10 +374,10 @@ void main() {
 
     test('remove stone near other color', () {
       BoardImpl board = BoardImpl(fiveByFive);
-      board.place(Stone(color: "black"), Position(2, 2));
-      board.place(Stone(color: "black"), Position(2, 1));
-      board.place(Stone(color: "white"), Position(1, 2));
-      board.place(Stone(color: "white"), Position(1, 1));
+      board.place(Stone(color: StoneColors.Black), Position(2, 2));
+      board.place(Stone(color: StoneColors.Black), Position(2, 1));
+      board.place(Stone(color: StoneColors.White), Position(1, 2));
+      board.place(Stone(color: StoneColors.White), Position(1, 1));
       expect(board.groups.length, 2);
 
       board.removeStone(board
@@ -400,11 +400,11 @@ void main() {
   group('Board#removeGroup', () {
     test('complete remove of group', () {
       BoardImpl board = BoardImpl(fiveByFive);
-      board.place(Stone(color: "black"), Position(2, 2));
-      board.place(Stone(color: "black"), Position(2, 1));
-      board.place(Stone(color: "black"), Position(3, 2));
-      board.place(Stone(color: "black"), Position(2, 3));
-      board.place(Stone(color: "black"), Position(1, 2));
+      board.place(Stone(color: StoneColors.Black), Position(2, 2));
+      board.place(Stone(color: StoneColors.Black), Position(2, 1));
+      board.place(Stone(color: StoneColors.Black), Position(3, 2));
+      board.place(Stone(color: StoneColors.Black), Position(2, 3));
+      board.place(Stone(color: StoneColors.Black), Position(1, 2));
 
       expect(board
           .get(Position(2, 2))

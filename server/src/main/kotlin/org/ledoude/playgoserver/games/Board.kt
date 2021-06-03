@@ -36,18 +36,19 @@ class Board(val columns: Int, val rows: Int) {
         }
 
         fun canPlace(color: Colors): Boolean {
-            val hasDirectLiberties = neighbours.any { i -> i.empty }
-            if (hasDirectLiberties) return true
-            val wouldCapture = neighbours.any { i ->
-                color != i.stone?.color
-                        && i.stone?.group?.freedoms()?.singleOrNull() == this.position
+            if(this.present) return false
+            for (n in neighbours) {
+                if(n.empty) return true // new move has direct liberties
+                if(n.stone!!.color != color) {
+                    // would generate liberties by capturing adjacent groups of different colors
+                    if(n.stone?.group?.freedoms()?.singleOrNull() == this.position) return true
+                } else {
+                    // neighbours of same color has liberties other than the current one
+                    if(n.stone?.group?.freedoms()?.any { p -> p != this.position } == true) return true
+                }
             }
-            if (wouldCapture) return true
-            val freedomsFromNeighboursGroup = neighbours.any { i ->
-                color == i.stone?.color &&
-                        i.stone?.group?.freedoms()?.any { p -> p != this.position } == true
-            }
-            return freedomsFromNeighboursGroup
+            // else this intersection is not playable
+            return false
         }
 
         val empty: Boolean

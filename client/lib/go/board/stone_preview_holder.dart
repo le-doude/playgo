@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:play_go_client/go/board.dart';
 import 'package:play_go_client/go/board/layout.dart';
 
 class StonePreviewHolder extends ValueNotifier<StonePreview?> {
@@ -10,7 +11,7 @@ class StonePreviewHolder extends ValueNotifier<StonePreview?> {
 }
 
 class StonePreview {
-  final String color;
+  final StoneColors color;
   final Position coordinate;
 
   StonePreview(this.color, this.coordinate);

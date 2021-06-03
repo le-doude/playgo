@@ -39,7 +39,7 @@ class _LocalPlayerTurnManagerImpl extends PlayerTurnManager {
 class Player {
   static final Uuid uuids = Uuid();
   final UuidValue _id;
-  final String color;
+  final StoneColors color;
   final bool _local;
 
   Player(this.color, {bool local = true})

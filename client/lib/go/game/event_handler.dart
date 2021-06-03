@@ -67,7 +67,7 @@ class GameOverEvent extends GameEvent {
 
 class GameNullifiedEvent extends GameEvent {
   final int moveNumber;
-  final String reason;
+  final StoneColors reason;
   final DateTime time;
 
   GameNullifiedEvent(this.moveNumber, this.reason, this.time);
@@ -84,7 +84,7 @@ class ResignedEvent extends GameEvent {
 class PassedEvent extends GameEvent {
   final int moveNumber;
   final Player passedBy;
-  final String color;
+  final StoneColors color;
   final DateTime time;
 
   PassedEvent(this.moveNumber, this.passedBy, this.color, this.time);
@@ -93,7 +93,7 @@ class PassedEvent extends GameEvent {
 class StonePlacedEvent extends GameEvent {
   final int moveNumber;
   final Player placedBy;
-  final String color;
+  final StoneColors color;
   final Position position;
   final Set<Stone> capturedStones;
   final DateTime time;

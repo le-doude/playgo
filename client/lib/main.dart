@@ -67,7 +67,7 @@ class _PlayGoClientHomePageState extends State<PlayGoClientHomePage> {
     var layout = Layouts.STANDARD_19_BY_19;
     var board = Board.make(layout);
     var actionManager = GameActionManager(LocalGame(board, Rules.japanese(),
-        PlayerTurnManager.local([Player("black"), Player("white")])));
+        PlayerTurnManager.local([Player(StoneColors.Black), Player(StoneColors.White)])));
     var previewHolder = StonePreviewHolder(null);
     var boardWidget = BoardWidget(
       board: board.notifier,

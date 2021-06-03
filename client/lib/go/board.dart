@@ -47,7 +47,7 @@ class BoardNotifier extends ValueNotifier<List<StonePosition>> {
 }
 
 class StonePosition {
-  final String color;
+  final StoneColors color;
   final Position position;
 
   StonePosition(this.color, this.position);
@@ -192,23 +192,23 @@ class Intersection {
   Set<Intersection> get neighbours => _neighbours;
 
   bool canPlace(Stone stone) {
-    // return empty && (!_wouldSuffocate(stone) || _wouldCapture(stone));
-    var hasDirectLiberties = neighbours.any((i) => i.empty);
-    if (hasDirectLiberties) return true;
-
-    var wouldCapture = neighbours.any((i) {
-      var freedoms = i.stone?.group?.freedoms();
-      return stone.color != i.stone?.color &&
-          freedoms?.length == 1 &&
-          freedoms?.contains(this._coordinate) == true;
-    });
-    if(wouldCapture) return true;
-
-    var freedomsFromNeighboursGroup = neighbours.any((i) =>
-      stone.color == i.stone?.color &&
-        i.stone?.group?.freedoms()?.any((p) => p != this._coordinate) == true
-    );
-    return freedomsFromNeighboursGroup;
+    if(present) return false;
+    for (var n in neighbours) {
+      // stone would have liberties of its own
+      if (n.empty) return true;
+      if (n.stone?.color != stone.color) {
+        // stone would capture some neighbours to make liberties
+        var freedoms = n.stone?.group?.freedoms();
+        if (freedoms?.length == 1 &&
+            freedoms?.contains(this._coordinate) == true) return true;
+      } else {
+        // stone would get liberties of neighbours of same color
+        // neighbours have liberties beside the current one
+        if (n.stone?.group?.freedoms()?.any((p) => p != this._coordinate) ==
+            true) return true;
+      }
+    }
+    return false;
   }
 
   bool contains(Stone stone) {
@@ -273,14 +273,18 @@ class Intersection {
   }
 }
 
+enum StoneColors {
+  White, Black
+}
+
 class Stone {
   static final Uuid uuids = Uuid();
   final UuidValue id;
-  final String color;
+  final StoneColors color;
   Intersection? intersection; // stone cant be moved to another intersection
   late Group group;
 
-  Stone({UuidValue? id, required String color})
+  Stone({UuidValue? id, required StoneColors color})
       : id = id ?? uuids.v4obj(),
         color = color {
     this.group = Group(stones: [this]);
@@ -313,7 +317,7 @@ class Group {
   final UuidValue _id;
   final Set<Stone> _stones;
 
-  String get color => stones.first.color;
+  StoneColors get color => stones.first.color;
 
   Group({UuidValue? id, required Iterable<Stone> stones})
       : _id = id ?? uuids.v4obj(),

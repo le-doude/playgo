@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:play_go_client/go/board.dart';
 import 'package:play_go_client/go/board/layout.dart';
 import 'package:play_go_client/go/board/widget/painter/board_coordinates_manager.dart';
 import 'package:play_go_client/go/board/widget/theme/go_colors.dart';
@@ -70,21 +71,21 @@ class GeometryStoneDrawer extends StoneDrawer {
 class StoneDrawers {
   static final StoneDrawer noop = NoopDrawer();
 
-  late final Map<String, StoneDrawer> _dict;
+  late final Map<StoneColors, StoneDrawer> _dict;
 
   StoneDrawers(double stoneSizeRatio, {double opacity = 1.0}) {
     this._dict = {
-      "white": GeometryStoneDrawer(
+      StoneColors.White: GeometryStoneDrawer(
           stoneSizeRatio: stoneSizeRatio,
           fill: GoColors.WHITE.withOpacity(opacity),
           stroke: GoColors.GREY.withOpacity(opacity)),
-      "black": GeometryStoneDrawer(
+      StoneColors.Black: GeometryStoneDrawer(
           stoneSizeRatio: stoneSizeRatio,
           fill: GoColors.BLACK.withOpacity(opacity))
     };
   }
 
-  StoneDrawer forColor(String? color) {
+  StoneDrawer forColor(StoneColors? color) {
     return _dict[color] ?? noop;
   }
 }
