@@ -2,6 +2,8 @@ package org.ledoude.playgoserver.games.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
 
 interface Codec {

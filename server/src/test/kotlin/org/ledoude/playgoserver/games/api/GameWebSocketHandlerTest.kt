@@ -7,6 +7,6 @@ import java.util.*
 internal class `utils` {
     @Test
     fun `generate uuid`() {
-        println(UUID.randomUUID())
+        println(UUID(0, 0))
     }
 }

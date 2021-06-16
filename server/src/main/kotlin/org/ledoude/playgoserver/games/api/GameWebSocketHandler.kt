@@ -1,28 +1,35 @@
 package org.ledoude.playgoserver.games.api
 
+import org.reactivestreams.Subscriber
 import org.springframework.web.reactive.socket.WebSocketHandler
 import org.springframework.web.reactive.socket.WebSocketMessage
 import org.springframework.web.reactive.socket.WebSocketSession
 import org.springframework.web.util.UriTemplate
-import reactor.core.publisher.Flux
-import reactor.core.publisher.FluxSink
 import reactor.core.publisher.Mono
-import java.time.Duration
+import reactor.kotlin.core.publisher.toMono
 import java.util.*
 
-class GameWebSocketHandler(val processorProvider: GameProcessorProvider, val codec: Codec) : WebSocketHandler {
+class GameWebSocketHandler(val factory: ApiManagerFactory) : WebSocketHandler {
     private val pathTemplate = UriTemplate("/games/{id}")
 
-    override fun handle(session: WebSocketSession): Mono<Void> {
-        val response: Flux<WebSocketMessage> = session.receive()
-            .map { with(makeProcessor(session)) { process(codec.decode(it.payloadAsText)) } }
-            .mapNotNull { event -> event?.let { session.textMessage(codec.encode(it)) } }
-        return session.send(response)
-    }
+//    override fun handle(session: WebSocketSession): Mono<Void> {
+//        val id: UUID = extractId(session)
+//        val input = apiManager.input(session, id)
+//
+//        val pub = session.send(apiManager.output(session, id))
+//
+//        return session.receive()
+//            .doOnNext(input::onNext)
+//            .doOnError(input::onError)
+//            .doOnComplete(input::onComplete)
+//            .doOnSubscribe(input::onSubscribe)
+//            .zipWith(pub).then()
+//    }
 
-    private fun makeProcessor(session: WebSocketSession): GameProcessor {
+    override fun handle(session: WebSocketSession): Mono<Void> {
         val id: UUID = extractId(session)
-        return processorProvider.get(id)
+        val manager = factory.make(id)
+        return manager.manage(session)
     }
 
     private fun extractId(session: WebSocketSession): UUID {

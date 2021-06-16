@@ -1,13 +1,24 @@
 package org.ledoude.playgoserver.games.config
 
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
+import org.springframework.data.redis.listener.ReactiveRedisMessageListenerContainer
 
-//@Configuration
+@Configuration
 class Redis {
-    @Value("\${spring.redis.host}")
-    lateinit var redisHost: String
+//    @Bean
+//    fun connectionFactory(
+//        @Value("\${spring.redis.host:localhost}") redisHost: String,
+//        @Value("\${spring.redis.port:6379}") redisPort: Int
+//    ): ReactiveRedisConnectionFactory {
+//        return LettuceConnectionFactory(redisHost, redisPort)
+//    }
 
-    @Value("\${spring.redis.port}")
-    lateinit var redisPort: String
+    @Bean
+    fun listenerContainer(connectionFactory: ReactiveRedisConnectionFactory): ReactiveRedisMessageListenerContainer {
+        return ReactiveRedisMessageListenerContainer(connectionFactory)
+    }
 }
