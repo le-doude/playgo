@@ -21,15 +21,24 @@ interface Api {
         fun register(session: WebSocketSession): Mono<Void>
     }
 
+    @JsonSubTypes(
+        JsonSubTypes.Type(Text::class),
+        JsonSubTypes.Type(GameState::class),
+        JsonSubTypes.Type(Echo::class),
+        JsonSubTypes.Type(ClientDisconnect::class),
+        JsonSubTypes.Type(ClientConnect::class),
+    )
     @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
         property = "event"
     )
-    @JsonSubTypes(
-        JsonSubTypes.Type(Text::class, name = "text"),
-        JsonSubTypes.Type(GameState::class, name = "gamestate"),
-        JsonSubTypes.Type(Echo::class, name = "echo"),
-    )
-    interface Event{}
+    interface Event{
+        interface GameAction : Event {
+            fun process(context: GameContext): Flux<Api.Event>
+        }
+        interface ChatAction : Event {
+            fun process(context: ChatContext): Flux<Api.Event>
+        }
+    }
 }

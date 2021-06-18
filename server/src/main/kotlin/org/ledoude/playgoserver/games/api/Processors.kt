@@ -9,6 +9,6 @@ class NoopProcessor : Api.Processor<Api.Event> {
 
     override fun process(event: Api.Event): Flux<Api.Event> {
         logger.debug("Processing $event")
-        return Flux.just(Echo(event), Text("separator"), Echo(event))
+        return Flux.just(Echo(event))
     }
 }
