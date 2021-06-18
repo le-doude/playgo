@@ -1,40 +1,42 @@
 package org.ledoude.playgoserver.games.api
 
-import org.reactivestreams.Subscriber
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.data.redis.core.ReactiveStringRedisTemplate
+import org.springframework.stereotype.Component
 import org.springframework.web.reactive.socket.WebSocketHandler
-import org.springframework.web.reactive.socket.WebSocketMessage
 import org.springframework.web.reactive.socket.WebSocketSession
 import org.springframework.web.util.UriTemplate
 import reactor.core.publisher.Mono
-import reactor.kotlin.core.publisher.toMono
 import java.util.*
 
-class GameWebSocketHandler(val factory: ApiManagerFactory) : WebSocketHandler {
+class GameWebSocketHandler(val factory: ManagerBuilder) : WebSocketHandler {
     private val pathTemplate = UriTemplate("/games/{id}")
-
-//    override fun handle(session: WebSocketSession): Mono<Void> {
-//        val id: UUID = extractId(session)
-//        val input = apiManager.input(session, id)
-//
-//        val pub = session.send(apiManager.output(session, id))
-//
-//        return session.receive()
-//            .doOnNext(input::onNext)
-//            .doOnError(input::onError)
-//            .doOnComplete(input::onComplete)
-//            .doOnSubscribe(input::onSubscribe)
-//            .zipWith(pub).then()
-//    }
 
     override fun handle(session: WebSocketSession): Mono<Void> {
         val id: UUID = extractId(session)
-        val manager = factory.make(id)
-        return manager.manage(session)
+        val manager = factory.build(id)
+        return manager.register(session)
     }
 
     private fun extractId(session: WebSocketSession): UUID {
         val match = pathTemplate.match(session.handshakeInfo.uri.rawPath)
         return UUID.fromString(match["id"])
+    }
+}
+
+interface ManagerBuilder {
+    fun build(uuid: UUID): Api.Manager
+}
+
+@Component
+class DefaultGameManagerBuilder(val objectMapper: ObjectMapper, val redisTemplate: ReactiveStringRedisTemplate) :
+    ManagerBuilder {
+    override fun build(uuid: UUID): Api.Manager {
+        return GenericApiManager(
+            JsonApiEventProtocol(JsonApiEventCodec(objectMapper)),
+            NoopProcessor(),
+            RedisPubSub("game:$uuid", redisTemplate, JsonApiEventCodec(objectMapper)),
+        )
     }
 }
 
