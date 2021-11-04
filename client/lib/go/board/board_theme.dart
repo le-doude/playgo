@@ -12,6 +12,7 @@ class BaseBoardTheme extends BoardTheme {
   final BackgroundSettings backgroundSettings;
   final double boardAspectRatio;
   final double stoneSizeRatio;
+  final double stoneShadowsOffsetRatio;
 
   BaseBoardTheme(
       {GridSettings? gridSettings,
@@ -20,13 +21,15 @@ class BaseBoardTheme extends BoardTheme {
       BoardReferenceSettings? boardReferenceSettings,
       BackgroundSettings? backgroundSettings,
       double boardAspectRatio = 1.0,
-      double stoneSizeRatio = 0.93})
+      double stoneSizeRatio = 0.93,
+      double stoneShadowsOffsetRatio = 0.05})
       : gridSettings = gridSettings ?? BaseGridSettings(),
         boardReferenceSettings =
             boardReferenceSettings ?? BaseBoardReferenceSettings(),
         backgroundSettings = backgroundSettings ?? BaseBackgroundSettings(),
         boardAspectRatio = boardAspectRatio,
         stoneSizeRatio = stoneSizeRatio,
+        stoneShadowsOffsetRatio = stoneShadowsOffsetRatio,
         stoneDrawers = stoneDrawers ?? StoneDrawers(stoneSizeRatio),
         previewDrawers =
             previewDrawers ?? StoneDrawers(stoneSizeRatio, opacity: 0.75);
@@ -46,6 +49,8 @@ abstract class BoardTheme {
   double get boardAspectRatio;
 
   double get stoneSizeRatio;
+
+  double get stoneShadowsOffsetRatio;
 }
 
 class Themes {

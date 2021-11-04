@@ -16,8 +16,8 @@ class StoneShadowsLayer extends BoardLayer {
   @override
   void draw(Canvas canvas, BoardCoordinates coordMngr) {
     canvas.save();
-    var tx = coordMngr.cellWidth * 0.05;
-    var ty = coordMngr.cellHeight * 0.05;
+    var tx = coordMngr.cellWidth * this._theme.stoneShadowsOffsetRatio;
+    var ty = coordMngr.cellHeight * this._theme.stoneShadowsOffsetRatio;
     canvas.translate(tx, ty);
 
     this._board.value.forEach((s) {
